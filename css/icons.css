@@ -1,0 +1,29 @@
+/* Icones */
+	.icon-menu {
+		background-image:url('../img/icon/menu.png');
+		
+	}
+
+	.icon-calendar {
+		background-image:url('../img/icon/calendar.png');
+		
+	}
+
+	.icon-menubola {
+		background-image:url('../img/icon/menubola.png');
+	}
+
+	[class^="icon-"] {
+		background-position: center;
+		background-repeat: no-repeat;
+	}
+
+	.bigicon {
+		width:55px;
+		height:55px;
+	}
+	
+	.smallicon {
+		width:33px;
+		height:33px;
+	}
