@@ -1,31 +1,125 @@
 <html>
 <meta charset="utf-8">
 <head>
-<title>Agenda Pública</title>
+	<title>Agenda Pública</title>
+<link href='https://fonts.googleapis.com/css?family=Lato:400,300,700,400italic' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" type="text/css" href="css/iconfont/flaticon.css">
+
+<style>
+	* {
+		font-family: 'Lato', sans-serif;
+	}
+
+	#container {
+		width:480px;
+		margin:0 auto;
+	}
+
+	#header {
+		width:480px;
+		height:110px;
+		background-color: #324C5D;
+   }
+
+	#header ul li.esq {
+		float:left;
+		margin-right:30px;
+	}
+
+	#header ul li.dir {
+		float:right;
+		margin-right:30px;
+	}
+
+	#header #menu li {
+		line-height: 110px;
+		color:#EFC94C;
+		height:100%;
+	}
+
+	#header #menu .mes {
+		font-size:24px;
+		font-weight:300;
+		text-transform: uppercase;
+	}
+
+	#footer {
+		background-color: #E3793F;
+	}
+
+
+	/* Icones */
+	.icon-menu {
+		background-image:url('img/icon/menu.png');
+		
+	}
+
+	.icon-calendar {
+		background-image:url('img/icon/calendar.png');
+		
+	}
+
+	.icon-menubola {
+		background-image:url('img/icon/menubola.png');
+	}
+
+	[class^="icon-"] {
+		background-position: center;
+		background-repeat: no-repeat;
+	}
+
+	.bigicon {
+		width:55px;
+		height:55px;
+	}
+	
+	.smallicon {
+		width:33px;
+		height:33px;
+	}
+
+</style>
 </head>
+
 <body>
 
 <div id="container">
 
-	<div id="header">
-		<h2>Janeiro 2016</h2>
+	<div id="header" class="blue">
+		<ul id="menu">
+			<li class="icon-menu bigicon esq"></li>
+			<li class="mes esq">JANEIRO</li>
+			<li class="icon-calendar smallicon dir"></li>
+			<li class="icon-menubola smallicon dir"></li>
+		</ul>
 	</div>
 	<div id="main">
 
 		<div class="dia">
-			<div>
+			<div class="data">
 				<div>5</div>
 				<div>SEG</div>
 			</div>
-			<div class="evento">
-				<div>Audiência Pública da Comissão de Finanças e Orçamento</div>
-				<div>Câmara de São Paulo - das 10h20 às 18h</div>
-				<div>Finanças, Orçamento, Administração</div>
-			</div>
-			<div class="evento">
-				<div>Audiência Pública da Comissão de Finanças e Orçamento</div>
-				<div>Câmara de São Paulo - das 10h20 às 18h</div>
-				<div>Finanças, Orçamento, Administração</div>
+			
+			<div class="eventos">
+				<div class="evento">
+					<div class="titulo">Audiência Pública da Comissão de Finanças e Orçamento</div>
+					<div class="local">Câmara de São Paulo - das 10h20 às 18h</div>
+					<ul class="tags">
+						<li>Finanças</li>
+						<li>Orçamento</li>
+						<li>Administração</li>
+					</ul>
+				</div>
+				<div class="evento">
+					<div>Audiência Pública da Comissão de Finanças e Orçamento</div>
+					<div>Câmara de São Paulo - das 10h20 às 18h</div>
+					<ul class="tags">
+						<li>Finanças</li>
+						<li>Orçamento</li>
+						<li>Administração</li>
+					</ul>
+				</div>
 			</div>
 		</div>
 
@@ -34,15 +128,17 @@
 				<div>10</div>
 				<div>SAB</div>
 			</div>
-			<div class="evento">
-				<div>Audiência Pública da Comissão de Finanças e Orçamento</div>
-				<div>Câmara de São Paulo - das 10h20 às 18h</div>
-				<div>Finanças, Orçamento, Administração</div>
-			</div>
-			<div class="evento">
-				<div>Audiência Pública da Comissão de Finanças e Orçamento</div>
-				<div>Câmara de São Paulo - das 10h20 às 18h</div>
-				<div>Finanças, Orçamento, Administração</div>
+			<div class="eventos">
+				<div class="evento">
+					<div>Audiência Pública da Comissão de Finanças e Orçamento</div>
+					<div>Câmara de São Paulo - das 10h20 às 18h</div>
+					<div>Finanças, Orçamento, Administração</div>
+				</div>
+				<div class="evento">
+					<div>Audiência Pública da Comissão de Finanças e Orçamento</div>
+					<div>Câmara de São Paulo - das 10h20 às 18h</div>
+					<div>Finanças, Orçamento, Administração</div>
+				</div>
 			</div>
 		</div>
 	</div>
