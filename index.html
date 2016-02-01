@@ -4,220 +4,86 @@
 	<title>Agenda Pública</title>
 <link href='https://fonts.googleapis.com/css?family=Lato:400,300,700,400italic' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="css/icons.css">
+<link rel="stylesheet" type="text/css" href="css/main.css">
+<script src="bower_components/handlebars/handlebars.min.js"></script>
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
 
-<style>
-	* {
-		font-family: 'Lato', sans-serif;
-	}
 
-	#container {
-		width:480px;
-		margin:0 auto;
-	}
-
-	#header {
-		width:480px;
-		height:110px;
-		background-color: #324C5D;
-   }
-
-	#header ul li.esq {
-		float:left;
-		margin-right:30px;
-	}
-
-	#header ul li.dir {
-		float:right;
-		margin-right:30px;
-	}
-
-	#header #menu li {
-		line-height: 110px;
-		color:#EFC94C;
-		height:100%;
-	}
-
-	#header #menu .mes {
-		font-size:24px;
-		font-weight:300;
-		text-transform: uppercase;
-	}
-
-	#header #menu .mes:after {
-		margin-left:10px;
-		content: url("img/icon/seta.png");
-	}
-
-	/* Parte principal */
-
-	#main .dia {
-		
-		clear:both;
-		width:480px;
-	}
-	#main .data {
-		padding:0px;
-		padding-left:26px;
-		width:54px;
-		float:left;
-	}
-
-	#main .eventos {
-		padding:0px;
-		padding-right:25px;
-		float:right;
-		width:375px;
-
-	}
-
-	#main .data {
-		color:#E3793F;
-		margin:0 auto;
-	}
-
-	#main .data .numero {
-		font-weight: bold;
-		font-size:25px;
-	}
-
-	#main .data .semana {
-		font-size:13px;
-	}
-
-	#main .evento {
-		width:375px;
-		background-color: #46B19D;
-		border: 2px none;
-    	border-radius: 10px;
-    	padding:5px;
-    	padding-left:15px;
-    	margin-top:10px;
-    	font-size:12px;
-	}
-
-	#main .evento .titulo {
-		font-weight: bold;
-		width:210px;
-	}
-
-	#main .evento .local {
-		width:210px;
-		font-weight: lighter;
-	}
-
-	#main .evento .tags {
-		width:210px;
-		font-style: italic;
-		padding:0px;
-	}
-
-	#main .evento .tags:before {
-		background-color: #324C5D;
-		border-style:none;
-		border-radius:50%;
-		display: inline-block;
-		height:12px;
-		width:12px;
-		font-size: 9px;
-		color:#E3793F;
-		content: "#";
-		text-align: center;
-	}
-	#main .evento .tags li {
-		list-style: none;
-		display:inline;
-	}
+<script>
+data = [{
+	"titulo" : "Audiência Pública da Comissão de Finanças e Orçamento",
+	"tipo" : "Audiência Pública",
+	"orgao" : "Câmara de São Paulo",
+	"responsavel" : "Câmara de São Paulo",
+	"tags" : ["Finanças", "Orçamento", "Administração"],
+	"local" : "Plenário 1º de Maio – 1º andar ",
+	"data_inicio" : "12/11/2015",
+	"data_fim" : "12/11/2015",
+	"horario" : "das 10h20 às 18h",
+	"descricao" : "Participantes Secretaria de Educação Controladoria Geral do Município IPREM Secretaria de Assistência e Desenvolvimento Social / Fundo de Assistência Social / FUMCAD – Fundo da Criança e do Adolescente Secretaria de Políticas para as Mulheres Secretaria da Pessoa com Deficiência e Mobilidade Reduzida Secretaria de Direitos Humanos e Cidadania",
+	"poster" : ""
+}];
+</script>
+<script>
+	Handlebars.registerHelper('dia', function(data) {
+	  var result = data.split("/")[0];
+	  return new Handlebars.SafeString(result);
+	});
 	
-	#main .evento .tags li:after {
-		content: ",";
-	
-	#main .evento .tags li:last-child:after {
-    	content: "";
-	}
+	$(document).ready(function () {
+	 	var source = $('#template').html();
+  		var template = Handlebars.compile(source);   // optional, speeds up future uses
+  		var rendered = template(data[0]);
+  		$('#main').html(rendered);
+	});
+</script>
 
-	#footer {
-		background-color: #E3793F;
-		height:130px;
-		clear:both;
-	}
-
-
-</style>
 </head>
-
 <body>
 
 <div id="container">
 
 	<div id="header" class="blue">
-		<ul id="menu">
+		<ul class="menu">
 			<li class="icon-menu bigicon esq"></li>
 			<li class="mes esq">JANEIRO</li>
 			<li class="icon-menubola smallicon dir"></li>
 			<li class="icon-calendar smallicon dir"></li>
 		</ul>
 	</div>
+	
 	<div id="main">
 
+	<script id="template" type="text/x-handlebars-template">
 		<div class="dia">
 			<div class="data">
-				<div class="numero">5</div>
+				<div class="numero">{{dia data_inicio}}</div>
 				<div class="semana">SEG</div>
 		</div>
 			
 			<div class="eventos">
 				<div class="evento">
-					<div class="titulo">Audiência Pública da Comissão de Finanças e Orçamento</div>
-					<div class="local">Câmara de São Paulo - das 10h20 às 18h</div>
+					<div class="titulo">{{titulo}}</div>
+					<div class="local">{{local}}</div>
 					<ul class="tags">
-						<li>Finanças</li>
-						<li>Orçamento</li>
-						<li>Administração</li>
-					</ul>
-				</div>
-				<div class="evento">
-					<div class="titulo">Audiência Pública da Comissão de Finanças e Orçamento</div>
-					<div class="local">Câmara de São Paulo - das 10h20 às 18h</div>
-					<ul class="tags">
-						<li>Finanças</li>
-						<li>Orçamento</li>
-						<li>Administração</li>
+						{{#tags}}
+						<li>{{.}}</li>
+						{{/tags}}
 					</ul>
 				</div>
 			</div>
 		</div>
+		</script>
 
-		<div class="dia">
-			<div class="data">
-				<div class="numero">10</div>
-				<div class="semana">SAB</div>
-		</div>
-			
-			<div class="eventos">
-				<div class="evento">
-					<div class="titulo">Audiência Pública da Comissão de Finanças e Orçamento</div>
-					<div class="local">Câmara de São Paulo - das 10h20 às 18h</div>
-					<ul class="tags">
-						<li>Finanças</li>
-						<li>Orçamento</li>
-						<li>Administração</li>
-					</ul>
-				</div>
-				<div class="evento">
-					<div class="titulo">Audiência Pública da Comissão de Finanças e Orçamento</div>
-					<div class="local">Câmara de São Paulo - das 10h20 às 18h</div>
-					<ul class="tags">
-						<li>Finanças</li>
-						<li>Orçamento</li>
-						<li>Administração</li>
-					</ul>
-				</div>
-		</div>
-		
+	</div>
 	<div id="footer">
-		<span>começamos um novo mês<br />veja o que temos na nossa Agenda Pública</span>
+		<div>
+			<span>começamos um novo mês<br />veja o que temos na nossa Agenda Pública</span>
+		</div>
+		<ul class="menu">
+			<li class="mes">FEVEREIRO</li>
+		</ul>
 
-		<h2>Fevereiro 2016</h2>
 	</div>
 
 </div>

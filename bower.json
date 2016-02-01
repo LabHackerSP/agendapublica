@@ -1,0 +1,22 @@
+{
+  "name": "agendapublica",
+  "homepage": "https://github.com/pmarkun/agendapublica",
+  "authors": [
+    "Pedro Markun <pedro@markun.com.br>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "jquery#^2.2.0",
+    "handlebars": "^4.0.5"
+  }
+}
