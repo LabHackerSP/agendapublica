@@ -10,7 +10,11 @@
 
 
 <script>
-data = [{
+data = {
+	"datas" : {"12112015" : { "dia" : "12/11/2015", "eventos" : []}}
+}
+
+data["datas"]["12112015"]["eventos"][0] = {
 	"titulo" : "Audiência Pública da Comissão de Finanças e Orçamento",
 	"tipo" : "Audiência Pública",
 	"orgao" : "Câmara de São Paulo",
@@ -22,10 +26,24 @@ data = [{
 	"horario" : "das 10h20 às 18h",
 	"descricao" : "Participantes Secretaria de Educação Controladoria Geral do Município IPREM Secretaria de Assistência e Desenvolvimento Social / Fundo de Assistência Social / FUMCAD – Fundo da Criança e do Adolescente Secretaria de Políticas para as Mulheres Secretaria da Pessoa com Deficiência e Mobilidade Reduzida Secretaria de Direitos Humanos e Cidadania",
 	"poster" : ""
-}];
+}
+
+data["datas"]["13112015"] = { "dia" : "13/11/2015", "eventos" : []};
+data["datas"]["13112015"]["eventos"][0] = {
+	"titulo" : "Audiência Pública da Comissão de Finanças e Orçamento",
+	"tipo" : "Audiência Pública",
+	"orgao" : "Câmara de São Paulo",
+	"responsavel" : "Câmara de São Paulo",
+	"tags" : ["Finanças", "Orçamento", "Administração"],
+	"local" : "Plenário 1º de Maio – 1º andar ",
+	"data_inicio" : "12/11/2015",
+	"data_fim" : "12/11/2015",
+	"horario" : "das 10h20 às 18h",
+	"descricao" : "Participantes Secretaria de Educação Controladoria Geral do Município IPREM Secretaria de Assistência e Desenvolvimento Social / Fundo de Assistência Social / FUMCAD – Fundo da Criança e do Adolescente Secretaria de Políticas para as Mulheres Secretaria da Pessoa com Deficiência e Mobilidade Reduzida Secretaria de Direitos Humanos e Cidadania",
+	"poster" : "" }
 </script>
 <script>
-	Handlebars.registerHelper('dia', function(data) {
+	Handlebars.registerHelper('first', function(data) {
 	  var result = data.split("/")[0];
 	  return new Handlebars.SafeString(result);
 	});
@@ -33,7 +51,7 @@ data = [{
 	$(document).ready(function () {
 	 	var source = $('#template').html();
   		var template = Handlebars.compile(source);   // optional, speeds up future uses
-  		var rendered = template(data[0]);
+  		var rendered = template(data);
   		$('#main').html(rendered);
 	});
 </script>
@@ -55,13 +73,15 @@ data = [{
 	<div id="main">
 
 	<script id="template" type="text/x-handlebars-template">
+		{{#each datas}}
 		<div class="dia">
 			<div class="data">
-				<div class="numero">{{dia data_inicio}}</div>
+				<div class="numero">{{first dia}}</div>
 				<div class="semana">SEG</div>
-		</div>
+			</div>
 			
 			<div class="eventos">
+			{{#each eventos}}
 				<div class="evento">
 					<div class="titulo">{{titulo}}</div>
 					<div class="local">{{local}}</div>
@@ -71,8 +91,10 @@ data = [{
 						{{/tags}}
 					</ul>
 				</div>
+			{{/each}}
 			</div>
 		</div>
+		{{/each}}
 		</script>
 
 	</div>
