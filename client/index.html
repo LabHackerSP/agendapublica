@@ -10,6 +10,7 @@
 <script src="bower_components/moment/min/moment.min.js"></script>
 
 <script>
+	NOW = moment()
 	Handlebars.registerHelper('datum', function(data, formato) {
 	  var d = moment(data)
 	  console.log(data);
@@ -35,7 +36,16 @@
 	<div id="header" class="blue">
 		<ul class="menu">
 			<li class="icon-menu bigicon esq"></li>
-			<li class="mes esq">JANEIRO</li>
+			<li class="mes esq dropdown">
+				<div class="dropbtn">JANEIRO</div>
+				<div class="dropdown-content">
+					<a href="#">FEVEREIRO</a>
+					<a href="#">MARÇO</a>
+					<a href="#">ABRIL</a>
+					<a href="#">MAIO</a>
+					<a href="#">JUNHO</a>
+				</div>
+			</li>
 			<li class="icon-menubola smallicon dir"></li>
 			<li class="icon-calendar smallicon dir"></li>
 		</ul>
