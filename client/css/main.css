@@ -1,16 +1,27 @@
+html, body {
+	height: 100vh;
+	min-height: 100vh;
+	margin:0;
+	padding:0;
+}
+
+body {
+	font-size: 1.2em;
+}
 * {
 		font-family: 'Lato', sans-serif;
 	}
 
 	#container {
-		width:480px;
-		margin:0 auto;
+		padding:0;
 	}
 
 	#header {
-		width:480px;
-		height:110px;
+		top:0;
+		width:100%;
+		height:8em;
 		background-color: #324C5D;
+		position: fixed;
    }
 
    #header .menu {
@@ -39,7 +50,7 @@
 	}
 
 	.menu .mes {
-		font-size:24px;
+		font-size:4em;
 		font-weight:300;
 		text-transform: uppercase;
 	}
@@ -52,27 +63,27 @@
 	/* Parte principal */
 
 	#main {
-		margin-top: 20px;
-		margin-bottom:20px;
-		min-height: 200px;
+		margin:8em auto;
+		min-height: 100%;
+		height: 100%;
+		height: auto !important;
+		overflow: hidden;
 	}
 	#main .dia {
-		
 		clear:both;
-		width:480px;
+		width:100%;
 	}
 	#main .data {
 		padding:0px;
-		padding-left:26px;
-		width:54px;
+		padding-left:2%;
+		width:13%;
 		float:left;
 	}
 
 	#main .eventos {
 		padding:0px;
-		padding-right:25px;
 		float:right;
-		width:375px;
+		width:85%;
 
 	}
 
@@ -83,36 +94,36 @@
 
 	#main .data .numero {
 		font-weight: bold;
-		font-size:25px;
+		font-size:4em;
 	}
 
 	#main .data .semana {
-		font-size:13px;
+		font-size:2em;
 	}
 
 	#main .evento {
-		width:375px;
+		width:97%;
 		background-color: #46B19D;
 		border: 2px none;
     	border-radius: 10px;
     	padding:5px;
     	padding-left:15px;
     	margin-top:10px;
-    	font-size:12px;
+    	font-size:2em;
 	}
 
 	#main .evento .titulo {
 		font-weight: bold;
-		width:210px;
+		width:80%;
 	}
 
 	#main .evento .local {
-		width:210px;
+		width:80%;
 		font-weight: lighter;
 	}
 
 	#main .evento .tags {
-		width:210px;
+		width:80%;
 		font-style: italic;
 		padding:0px;
 	}
@@ -122,9 +133,9 @@
 		border-style:none;
 		border-radius:50%;
 		display: inline-block;
-		height:12px;
-		width:12px;
-		font-size: 9px;
+		height:1.3em;
+		width:1.3em;
+		font-size: 0.9em;
 		color:#E3793F;
 		content: "#";
 		text-align: center;
@@ -143,23 +154,30 @@
     	content: "";
 	}
 
+	#main .push {
+		height: 6em;
+		clear:left;
+	}
 	#footer {
 		background-color: #E3793F;
-		height:130px;
+		height:6em;
 		clear:both;
 		width:100%;
+		position: fixed;
+		bottom: 0;
 	}
 
 	#footer div {
-		margin:0 auto;
-		width:260px;
+		float:left;
+		width:48%;
 		color:#FFF;
-		font-size: 13px;
+		font-size: 1.3em;
 		padding-top: 10px;
+		padding-left:2%;
 	}
 
 	#footer .menu { 
+		margin: 0;
 		float:right;
-		margin-top:-20px;
-		width:200px;
+		width: 50%;
 		}

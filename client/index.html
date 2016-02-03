@@ -18,7 +18,6 @@
 		
 	$(document).ready(function () {
 		$.getJSON("http://0.0.0.0:5000/api/evento", function (data) {
-			console.log(data.objects);
 			var source = $('#template').html();
 			var template = Handlebars.compile(source);   // optional, speeds up future uses
 			var rendered = template(data);
@@ -65,8 +64,8 @@
 			</div>
 		</div>
 		{{/each}}
-		</script>
-
+		<div class="push"></div>
+	</script>
 	</div>
 	<div id="footer">
 		<div>
@@ -77,7 +76,7 @@
 		</ul>
 
 	</div>
-
+		
 </div>
 
 </body>
