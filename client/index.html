@@ -10,21 +10,64 @@
 <script src="bower_components/moment/min/moment.min.js"></script>
 
 <script>
-	NOW = moment()
+	SERVER = "http://0.0.0.0:5000/api/evento";
+	NOW = moment();
 	Handlebars.registerHelper('datum', function(data, formato) {
 	  var d = moment(data)
 	  console.log(data);
 	  return d.format(formato);
 	});
 		
-	$(document).ready(function () {
-		$.getJSON("http://0.0.0.0:5000/api/evento", function (data) {
-			var source = $('#template').html();
-			var template = Handlebars.compile(source);   // optional, speeds up future uses
-			var rendered = template(data);
-  			$('#main').html(rendered);
+	function carregaEventos() {
+		var query = { 
+			"filters": [{	"name":"data_inicio",
+							"op":"gte",
+							"val": NOW.format("YYYY-MM")
+						}],
+			"order_by": [{
+					"field":"data_inicio",
+					"direction":"asc"
+					}]
+				}
+		var url = SERVER + "?q=" + JSON.stringify(query);
+
+		$.getJSON(url, function (data) {
+				var rendered = template(data);
+	  			$('#main').html(rendered);
+			});
+	}
+
+		function carregaMenu() {
+		//Menu
+		$(".current_month").text(NOW.format("MMMM"));
+		
+		var m = Number(NOW.format("M"));
+		$(".months").html("");
+		for (i=m;i<m+6;i++) {
+			mm = NOW.add(1, 'month');
+			$(".months").append("<a href='' data-month='"+mm.format("YYYY-MM")+"'>"+mm.format("MMMM")+"</a>")
+		}
+		NOW.subtract(6, 'month');
+		$(".current_month").click(function () {
+			$(".dropdown .dropdown-content").show();
 		});
-	 	
+
+		$(".months a").click(function (evt) {
+			evt.preventDefault();
+			var m = $(evt.currentTarget).data('month');
+			NOW = moment(m);
+			$(".current_month").text(NOW.format("MMMM"));
+			$(".dropdown .dropdown-content").hide();
+			carregaMenu();
+		});
+		carregaEventos();
+	}
+
+
+	$(document).ready(function () {
+		source = $('#template').html();
+		template = Handlebars.compile(source);   // optional, speeds up future uses
+		carregaMenu();
 	});
 </script>
 
@@ -37,13 +80,8 @@
 		<ul class="menu">
 			<li class="icon-menu bigicon esq"></li>
 			<li class="mes esq dropdown">
-				<div class="dropbtn">JANEIRO</div>
-				<div class="dropdown-content">
-					<a href="#">FEVEREIRO</a>
-					<a href="#">MARÇO</a>
-					<a href="#">ABRIL</a>
-					<a href="#">MAIO</a>
-					<a href="#">JUNHO</a>
+				<div class="current_month dropbtn">JANEIRO</div>
+				<div class="months dropdown-content">
 				</div>
 			</li>
 			<li class="icon-menubola smallicon dir"></li>
@@ -55,6 +93,7 @@
 
 	<script id="template" type="text/x-handlebars-template">
 		{{#each objects}}
+		<a name="2015-02"><hr /></a>
 		<div class="dia">
 			<div class="data">
 				<div class="numero">{{datum data_inicio "d"}}</div>
