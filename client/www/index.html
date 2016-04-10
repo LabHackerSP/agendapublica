@@ -1,140 +1,83 @@
+<!DOCTYPE html>
 <html>
-<meta charset="utf-8">
-<head>
-	<title>Agenda Pública</title>
-<link href='https://fonts.googleapis.com/css?family=Lato:400,300,700,400italic' rel='stylesheet' type='text/css'>
-<link rel="stylesheet" type="text/css" href="css/icons.css">
-<link rel="stylesheet" type="text/css" href="css/main.css">
-<script src="bower_components/handlebars/handlebars.min.js"></script>
-<script src="bower_components/jquery/dist/jquery.min.js"></script>
-<script src="bower_components/moment/min/moment.min.js"></script>
-
-<script>
-	SERVER = "http://0.0.0.0:5000/api/evento";
-	NOW = moment();
-	Handlebars.registerHelper('datum', function(data, formato) {
-	  var d = moment(data)
-	  console.log(data);
-	  return d.format(formato);
-	});
-		
-	function carregaEventos() {
-		var query = { 
-			"filters": [{	"name":"data_inicio",
-							"op":"gte",
-							"val": NOW.format("YYYY-MM")
-						}],
-			"order_by": [{
-					"field":"data_inicio",
-					"direction":"asc"
-					}]
-				}
-		var url = SERVER + "?q=" + JSON.stringify(query);
-		console.log(url);
-		$.getJSON(url, function (data) {
-				var rendered = template(data);
-	  			$('#main').html(rendered);
-			});
-	}
-
-		function carregaMenu() {
-		//Menu
-		$(".current_month").text(NOW.format("MMMM"));
-		
-		var m = Number(NOW.format("M"));
-		$(".months").html("");
-		for (i=m;i<m+6;i++) {
-			mm = NOW.add(1, 'month');
-			$(".months").append("<a href='' data-month='"+mm.format("YYYY-MM")+"'>"+mm.format("MMMM/YY")+"</a>")
-		}
-		NOW.subtract(6, 'month');
-		$(".current_month").click(function () {
-			$(".dropdown .dropdown-content").show();
-		});
-
-		$(".months a").click(function (evt) {
-			evt.preventDefault();
-			var m = $(evt.currentTarget).data('month');
-			NOW = moment(m);
-			console.log(NOW);
-			$(".current_month").text(NOW.format("MMMM"));
-			$(".dropdown .dropdown-content").hide();
-			carregaMenu();
-		});
-
-		$(".icon-calendar").click(function (evt) {
-			NOW = moment();
-			$(".dropdown .dropdown-content").hide();
-			carregaMenu();
-		});
-
-		carregaEventos();
-	}
-
-
-	$(document).ready(function () {
-		source = $('#template').html();
-		template = Handlebars.compile(source);   // optional, speeds up future uses
-		carregaMenu();
-	});
-</script>
-
-</head>
-<body>
-
-<div id="container">
-
-	<div id="header" class="blue">
-		<ul class="menu">
-			<li class="icon-menu bigicon esq"></li>
-			<li class="mes esq dropdown">
-				<div class="current_month dropbtn">JANEIRO</div>
-				<div class="months dropdown-content">
-				</div>
-			</li>
-			<li class="icon-menubola smallicon dir"></li>
-			<li class="icon-calendar smallicon dir"></li>
-		</ul>
-	</div>
-	
-	<div id="main">
-
-	<script id="template" type="text/x-handlebars-template">
-		{{#each objects}}
-		<a name="2015-02"><hr /></a>
-		<div class="dia">
-			<div class="data">
-				<div class="numero">{{datum data_inicio "d"}}</div>
-				<div class="semana">{{datum data_inicio "ddd"}}</div>
-			</div>
+    <head>
+        <!--
+        Customize this policy to fit your own app's needs. For more guidance, see:
+            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+        Some notes:
+            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <link rel="stylesheet" type="text/css" href="css/index.css">
+        <link rel="stylesheet" type="text/css" href="css/icons.css">
+        <script src="bower_components/handlebars/handlebars.min.js"></script>
+        <script src="bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="bower_components/moment/min/moment.min.js"></script>
+        <script src=js/index.js></script>
+        <title>Agenda Pública</title>
+    </head>
+    
+    <body ontouchstart=""><!-- ontouchstart="" enables low-delay CSS transitions. -->
+        <header>
+            <span class="esq">
+                <span id="menu-button" class="bigicon button"></span>
+            </span>
+            <div id="mes-header" class="dropdown">
+                <span class="mes">JANEIRO</span>
+                <span class="arrow button"></span>
+                <div class="dropdown-content">
+                  <ul>
+                    <li>fevereiro</li>
+                    <li>aaa</li>
+                  </ul>
+                </div>
+            </div>
+            <span class="dir">
+                <span id="calendar-button" class="smallicon button"></span>
+                <span id="dots-button" class="smallicon button"></span>
+            </span>
+        </header>
+        
+        <div id="content">
+            <script id="template" type="text/x-handlebars-template">
+		          {{#each objects}}
+		          <a name="2015-02"><hr /></a>
+		          <div class="dia">
+			          <div class="data">
+				          <div class="numero">{{datum data_inicio "d"}}</div>
+				          <div class="semana">{{datum data_inicio "ddd"}}</div>
+			          </div>
 			
-			<div class="eventos">
-				<div class="evento">
-					<div class="titulo">{{titulo}}</div>
-					<div class="local">{{local}} - {{horario}}</div>
-					<ul class="tags">
-						{{#tags}}
-						<li>{{tag}}</li>
-						{{/tags}}
-					</ul>
-				</div>
-			</div>
-		</div>
-		{{/each}}
-		<div class="push"></div>
-	</script>
-	</div>
-	<div id="footer">
-		<div>
-			<span>começamos um novo mês<br />veja o que temos na nossa Agenda Pública</span>
-		</div>
-		<ul class="menu">
-			<li class="mes">FEVEREIRO</li>
-		</ul>
-
-	</div>
-		
-</div>
-
-</body>
+			          <div class="eventos">
+				          <div class="evento">
+					          <div class="titulo">{{titulo}}</div>
+					          <div class="local">{{local}} - {{horario}}</div>
+					          <ul class="tags">
+						          {{#tags}}
+						          <li>{{tag}}</li>
+						          {{/tags}}
+					          </ul>
+				          </div>
+			          </div>
+		          </div>
+		          {{/each}}
+		          <div class="push"></div>
+	          </script>
+        </div>
+        
+        <footer>
+            <p>começamos um novo mês<br />veja o que temos na nossa Agenda Pública</p>
+            <span class="mes-footer">
+                <span class="mes">FEVEREIRO</div>
+                <span class="arrow button"></span>
+            </span>
+        </footer>
+    </body>
 </html>
