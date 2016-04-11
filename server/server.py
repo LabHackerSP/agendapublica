@@ -86,7 +86,8 @@ def reiniciar():
     db.create_all()
     db.session.commit()
 
-if __name__ == "__main__":   
+@app.route("/")
+def main():
     admin = Admin(app, name='Agenda Publica', template_mode='bootstrap3')
     # Add administrative views here
     admin.add_view(ModelView(Evento, db.session))
@@ -102,4 +103,7 @@ if __name__ == "__main__":
     # default. Allowed HTTP methods can be specified as well.
     manager.create_api(Evento, methods=['GET'])
 
-    app.run(debug=True)
+    app.run(host='0.0.0.0')#,debug=True)
+
+if __name__ == "__main__":   
+    main()

@@ -1,0 +1,98 @@
+
+	#content {
+		/*margin:8em auto;*/
+		min-height: 100%;
+		height: 100%;
+		height: auto !important;
+		overflow: hidden;
+		font-size: 40%;
+	}
+	#content .dia {
+		clear:both;
+		width:100%;
+	}
+	#content .data {
+		padding:0px;
+		padding-left:2%;
+		width:13%;
+		float:left;
+	}
+
+	#content .eventos {
+		padding:0px;
+		float:right;
+		width:85%;
+
+	}
+
+	#content .data {
+		color:#E3793F;
+		margin:0 auto;
+	}
+
+	#content .data .numero {
+		font-weight: bold;
+		font-size:4em;
+	}
+
+	#content .data .semana {
+		font-size:2em;
+	}
+
+	#content .evento {
+		width:97%;
+		background-color: #46B19D;
+		border: 2px none;
+    	border-radius: 10px;
+    	padding:5px;
+    	padding-left:15px;
+    	margin-top:10px;
+    	font-size:2em;
+	}
+
+	#content .evento .titulo {
+		font-weight: bold;
+		width:80%;
+	}
+
+	#content .evento .local {
+		width:80%;
+		font-weight: lighter;
+	}
+
+	#content .evento .tags {
+		width:80%;
+		font-style: italic;
+		padding:0px;
+	}
+
+	#content .evento .tags:before {
+		background-color: #324C5D;
+		border-style:none;
+		border-radius:50%;
+		display: inline-block;
+		height:1.3em;
+		width:1.3em;
+		font-size: 0.9em;
+		color:#E3793F;
+		content: "#";
+		text-align: center;
+	}
+	#content .evento .tags li {
+		list-style: none;
+		display:inline;
+	}
+	
+	#content .evento .tags li:after {
+		content: ",";
+
+	}
+
+	#content .evento .tags li:last-child:after {
+    	content: "";
+	}
+
+	#content .push {
+		height: 6em;
+		clear:left;
+	}

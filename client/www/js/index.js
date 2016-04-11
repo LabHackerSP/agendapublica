@@ -1,4 +1,4 @@
-	SERVER = "http://0.0.0.0:5000/api/evento";
+	SERVER = "http://10.0.0.237:5000/api/evento";
 	NOW = moment();
 	Handlebars.registerHelper('datum', function(data, formato) {
 	  var d = moment(data)
@@ -21,7 +21,7 @@
 		console.log(url);
 		$.getJSON(url, function (data) {
 				var rendered = template(data);
-	  			$('#main').html(rendered);
+	  			$('#content').html(rendered);
 			});
 	}
 
