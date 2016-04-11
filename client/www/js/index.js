@@ -1,4 +1,4 @@
-	SERVER = "http://10.0.0.237:5000/api/evento";
+	SERVER = "http://labhacker.org.br:5000/api/evento";
 	NOW = moment();
 	Handlebars.registerHelper('datum', function(data, formato) {
 	  var d = moment(data)
