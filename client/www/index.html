@@ -1,84 +1,56 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-    <head>
-        <!--
-        Customize this policy to fit your own app's needs. For more guidance, see:
-            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
-        Some notes:
-            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
-            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
-            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
-                * Enable inline JS: add 'unsafe-inline' to default-src
-        -->
-        <meta charset="utf-8">
-        <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">-->
-        <meta name="format-detection" content="telephone=no">
-        <meta name="msapplication-tap-highlight" content="no">
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
-        <link rel="stylesheet" type="text/css" href="css/index.css">
-        <link rel="stylesheet" type="text/css" href="css/evento.css">
-        <link rel="stylesheet" type="text/css" href="css/icons.css">
-        <script src="js/handlebars-v4.0.5.js"></script>
-        <script src="js/jquery-2.2.3.min.js"></script>
-        <script src="js/moment.js"></script>
-        <script src="js/index.js"></script>
-        <title>Agenda Pública</title>
-    </head>
-    
-    <body ontouchstart=""><!-- ontouchstart="" enables low-delay CSS transitions. -->
-        <header>
-            <span class="esq">
-                <span id="menu-button" class="bigicon button"></span>
-            </span>
-            <div id="mes-header" class="dropdown">
-                <span class="mes">JANEIRO</span>
-                <span class="arrow button"></span>
-                <div class="dropdown-content">
-                  <ul>
-                    <li>fevereiro</li>
-                    <li>aaa</li>
-                  </ul>
-                </div>
-            </div>
-            <span class="dir">
-                <span id="calendar-button" class="smallicon button"></span>
-                <span id="dots-button" class="smallicon button"></span>
-            </span>
-        </header>
-        
-        <div id="content">
-            <script id="template" type="text/x-handlebars-template">
-		          {{#each objects}}
-		          <a name="2015-02"><hr /></a>
-		          <div class="dia">
-			          <div class="data">
-				          <div class="numero">{{datum data_inicio "d"}}</div>
-				          <div class="semana">{{datum data_inicio "ddd"}}</div>
-			          </div>
-			
-			          <div class="eventos">
-				          <div class="evento">
-					          <div class="titulo">{{titulo}}</div>
-					          <div class="local">{{local}} - {{horario}}</div>
-					          <ul class="tags">
-						          {{#tags}}
-						          <li>{{tag}}</li>
-						          {{/tags}}
-					          </ul>
-				          </div>
-			          </div>
-		          </div>
-		          {{/each}}
-		          <div class="push"></div>
-	          </script>
-        </div>
-        
-        <footer>
-            <p>começamos um novo mês<br />veja o que temos na nossa Agenda Pública</p>
-            <span class="mes-footer">
-                <span class="mes">FEVEREIRO</div>
-                <span class="arrow button"></span>
-            </span>
-        </footer>
-    </body>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1"> 
+
+  <title>Agenda Pública</title>
+
+  <link rel="stylesheet" href="themes/agenda.min.css" />
+  <link rel="stylesheet" href="themes/jquery.mobile.icons.min.css" />
+  <link rel="stylesheet" href="themes/jquery.mobile.datepicker.theme.css" />
+  <link rel="stylesheet" href="css/jquery.mobile.structure-1.4.5.min.css" />
+  <link rel="stylesheet" href="css/jquery.mobile.datepicker.css" />
+  <link rel="stylesheet" href="css/settings.css" />
+
+  <script src="cordova.js"></script>
+  <script src="js/jquery-1.11.3.min.js"></script>
+  <script src="js/jquery.mobile-1.4.5.min.js"></script>
+  <script src="js/jquery.ui.datepicker.js"></script>
+  <script src="js/jquery.mobile.datepicker.js"></script>
+  <!--<script src="js/moment.js"></script>-->
+  <script src="js/agenda.js"></script>
+</head>
+
+<body onload="onLoad()">
+  <div data-role="page" id="index" data-theme="a">
+    <!-- painel menu -->
+    <div data-role="panel" data-position="left" data-display="push" id="menu">
+      <ul data-role="listview" class="ui-listview-outer">
+        <li><a href="#calendario" data-rel="popup">Busca por data</a></li>
+        <li><a href="#">Item 1</a></li>
+        <li><a href="#">Item 2</a></li>
+      </ul>
+    </div>
+    <!-- calendário -->
+    <div data-role="popup" id="calendario">
+      <div>
+        <input id="data" type="hidden" data-inline="true" />
+        <a href="#" data-role="button" onClick="carregaData();">Buscar</a>
+      </div>
+    </div>
+    <!-- header -->
+    <div data-role="header" data-position="fixed" data-theme="b">
+      <a href="#menu" class="ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all"></a>
+      <h1>Agenda Pública</h1>
+      <a href="#" onClick="carregaEventos();" class="ui-btn ui-icon-calendar ui-btn-icon-right ui-corner-all">Hoje</a>
+    </div>
+    <!-- conteúdo -->
+    <div data-role="content" id="eventos">
+    </div>
+    <!-- painel de evento -->
+    <div data-role="panel" data-position="right" data-display="overlay" id="info">
+    </div>
+  </div>
+</body>
 </html>
