@@ -4,9 +4,7 @@ var dataSelecionada;
 var datasComEventos;
 
 $(document).on("pageinit","#index",function(){ // When entering index
-  if(carregaMes()) {
-    mostraEventos();
-  }
+  carregaHoje();
   
   $(document).on("swiperight", "#index", openMenu);
   
@@ -52,13 +50,6 @@ function openMenu() {
       $("#menu").panel("open");
     //}
   }
-}
-
-function carregaData() {
-  $("[data-role=panel]").panel("close");
-  $("[data-role=popup]").popup("close");
-  //carregaEventos($('#data').date('getDate'));
-  mostraEventos();
 }
 
 function carregaMes(date) {
@@ -119,6 +110,20 @@ function carregaMes(date) {
     }
   });
   return true;
+}
+
+function carregaBusca() {
+  $("[data-role=panel]").panel("close");
+  $("[data-role=popup]").popup("close");
+  //carregaEventos($('#data').date('getDate'));
+  mostraEventos();
+}
+
+function carregaHoje() {
+  if(carregaMes()) {
+    mostraEventos();
+  }
+  // se não der isso, deu erro!!
 }
 
 function addDays(date, days) {
