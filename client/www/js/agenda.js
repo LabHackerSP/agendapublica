@@ -1,12 +1,15 @@
 SERVER = "http://labhacker.org.br:5000/api/evento";
 var JSONcache;
+var dataSelecionada;
+var datasComEventos;
 
 $(document).on("pageinit","#index",function(){ // When entering index
-  carregaEventos();
+  if(carregaMes()) {
+    mostraEventos();
+  }
   
   $(document).on("swiperight", "#index", openMenu);
   
-  console.log($.datepicker.regional);
   var datept = {
     dayNames: [ "Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado" ],
     dayNamesMin: [ "Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab" ],
@@ -16,12 +19,11 @@ $(document).on("pageinit","#index",function(){ // When entering index
   $.datepicker.setDefaults(datept);
   
   // datepicker init
-  $("#data").date();/*{
-    dayNames: [ "Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado" ],
-    dayNamesMin: [ "Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab" ],
-    monthNames: [ "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro" ],
-    monthNamesShort: [ "Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez" ]
-  });*/
+  $("#data").date({
+    constrainInput: true,
+    onChangeMonthYear: updateMonth,
+    beforeShowDay: markDates
+  });
 });
 
 function onLoad() {
@@ -35,12 +37,12 @@ function onDeviceReady() {
 }
 
 function closeMenus() {
-  if($.mobile.activePage.jqmData("popup") == "open") {
+  if($.mobile.activePage.jqmData("popup") == "open") { // primeiro fecha popups, não funciona
     $("[data-role=popup]").popup("close");
-  } else if($.mobile.activePage.jqmData("panel") == "open") {
+  } else if($.mobile.activePage.jqmData("panel") == "open") { // segundo fecha paineis
     $("[data-role=panel]").panel("close");
   } else {
-    navigator.app.exitApp()
+    navigator.app.exitApp() // só depois fecha app
   }
 }
 
@@ -55,34 +57,41 @@ function openMenu() {
 function carregaData() {
   $("[data-role=panel]").panel("close");
   $("[data-role=popup]").popup("close");
-  carregaEventos($('#data').date('getDate'));
+  //carregaEventos($('#data').date('getDate'));
+  mostraEventos();
 }
 
-function carregaEventos(date) {
+function carregaMes(date) {
   if(date == null) {
     date = new Date();
   }
-  console.log(date);
-  var formattedDate = $.datepicker.formatDate('yy-mm-dd', date);
-  console.log(formattedDate);
+  var startDate = new Date(date.getFullYear(), date.getMonth(), 1);
+  var endDate = new Date(date.getFullYear(), date.getMonth()+1, 0); //hack !!!!
+  var formattedStartDate = $.datepicker.formatDate('yy-mm-dd', startDate);
+  var formattedEndDate = $.datepicker.formatDate('yy-mm-dd', endDate);
   var query = { 
     "filters": [{
       "name":"data_inicio",
       "op":"gte",
-      "val": formattedDate
+      "val": formattedStartDate
+    },{
+      "name":"data_inicio",
+      "op":"lte",
+      "val": formattedEndDate
     }],
     "order_by": [{
       "field":"data_inicio",
       "direction":"asc"
     }]
   }
+  
   var url = SERVER + "?q=" + JSON.stringify(query);
   console.log(url);
 
   $.ajax({
     url: url,
     dataType: "json",
-    async: true,
+    async: false,
     beforeSend: function() {
       // This callback function will trigger before data is sent
       $.mobile.loading('show', {theme:"a", text:"Aguarde...", textonly:false, textVisible: true}); // This will show ajax spinner
@@ -90,14 +99,26 @@ function carregaEventos(date) {
     complete: function() {
       // This callback function will trigger on data sent/received complete
       $.mobile.loading('hide'); // This will hide ajax spinner
-    },                
+    },
     success: function (result) {
-      parseJSON(result);
+      //parseJSON(result);
+      JSONcache = result;
+      // pega datas, põe num array para markDates
+      datasComEventos = [];
+      for(var v in JSONcache.objects) {
+        var obj = JSONcache.objects[v];
+        var adate = $.datepicker.formatDate('yy-mm-dd', new Date(obj.data_inicio));
+        if($.inArray(adate, datasComEventos) == -1) { //se não está no array
+          datasComEventos[datasComEventos.length] = adate;
+        }
+      }
     },
     error: function (request,error) {
       alert('Não foi possível acessar o servidor!');
+      return false;
     }
   });
+  return true;
 }
 
 function addDays(date, days) {
@@ -106,8 +127,8 @@ function addDays(date, days) {
     return result;
 }
 
-function parseJSON(result) {
-  JSONcache = result;
+function mostraEventos() {
+  var result = JSONcache; // porco? talvez
   var content = "";
   if(result.num_results < 1) {
     content += "<p>Não há eventos para a data escolhida!</p>";
@@ -149,4 +170,19 @@ function loadEvent(id) {
   }
   // if we got here we didn't find the event
   alert("Não foi possível encontrar o evento selecionado");
+}
+
+function updateMonth(year, month, inst) {
+  dataSelecionada = new Date(year, month-1, 1); // ????? que há com o mês? não sei
+  if(!carregaMes(dataSelecionada)) {
+    //erro!!!
+  }
+}
+
+function markDates(date) {
+  var m = $.datepicker.formatDate('yy-mm-dd', date);
+  if($.inArray(m, datasComEventos) > -1) { //se está no array
+    return [false, 'ui-state-highlight'];
+  }
+  return false;
 }
