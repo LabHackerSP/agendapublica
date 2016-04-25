@@ -1,5 +1,6 @@
 SERVER = "http://labhacker.org.br:5000/api/evento";
-var JSONcache;
+var cacheCalendario;
+var cacheEventos;
 var dataSelecionada;
 var datasComEventos;
 
@@ -93,11 +94,11 @@ function carregaMes(date) {
     },
     success: function (result) {
       //parseJSON(result);
-      JSONcache = result;
+      cacheCalendario = result;
       // pega datas, põe num array para markDates
       datasComEventos = [];
-      for(var v in JSONcache.objects) {
-        var obj = JSONcache.objects[v];
+      for(var v in result.objects) {
+        var obj = result.objects[v];
         var adate = $.datepicker.formatDate('yy-mm-dd', new Date(obj.data_inicio));
         if($.inArray(adate, datasComEventos) == -1) { //se não está no array
           datasComEventos[datasComEventos.length] = adate;
@@ -133,7 +134,8 @@ function addDays(date, days) {
 }
 
 function mostraEventos() {
-  var result = JSONcache; // porco? talvez
+  cacheEventos = cacheCalendario;
+  var result = cacheEventos; // porco? talvez
   var content = "";
   if(result.num_results < 1) {
     content += "<p>Não há eventos para a data escolhida!</p>";
@@ -163,8 +165,8 @@ function mostraEventos() {
 
 function loadEvent(id) {
   var content = "";
-  for(var v in JSONcache.objects) {
-    var obj = JSONcache.objects[v];
+  for(var v in cacheEventos.objects) {
+    var obj = cacheEventos.objects[v];
     if(obj.id == id) {
       content += "<h1>" + obj.titulo + "</h1>"
       $("#info").html(content)
