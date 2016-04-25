@@ -153,7 +153,7 @@ function mostraEventos() {
       content += "<li><a href='#' onClick='loadEvent(" + obj.id + ");'>";
       content += "<h2>" + obj.titulo + "</h2>";
       content += "<p><strong>" + obj.descricao + "</strong></p>";
-      content += "<p>" + obj.endereco + "</p>";
+      content += "<p>" + obj.local + "</p>";
       content += "<p class='ui-li-aside'><strong>" + obj.horario + "</strong></p>";
       content += "</a></li>";
     }
@@ -168,10 +168,17 @@ function loadEvent(id) {
   for(var v in cacheEventos.objects) {
     var obj = cacheEventos.objects[v];
     if(obj.id == id) {
-      content += "<h1>" + obj.titulo + "</h1>"
-      $("#info").html(content)
-      $("#info").trigger("create");
-      $("#info").panel("open");
+      content += "<h2>" + obj.titulo + "</h2>";
+      content += "<h4>" + obj.descricao + "</h4>";
+      content += "<p>" + obj.local + "</p>";
+      content += "<p>" + obj.endereco + "</p>";
+      content += "<p>De: " + $.datepicker.formatDate("d 'de' MM 'de' yy", new Date(obj.data_inicio)); + "</p>";
+      content += "<p>Até: " + $.datepicker.formatDate("d 'de' MM 'de' yy", new Date(obj.data_fim)); + "</p>";
+      content += "<p>" + obj.horario + "</p>";
+      content += "<p>Link: <a href=\"#\" onclick=\"window.open('" + obj.link + "', '_system');\">" + obj.link + "</a></p>";
+      $("#info").html(content);
+      $("#info-panel").trigger("create");
+      $("#info-panel").panel("open");
       return;
     }
   }
