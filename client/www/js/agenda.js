@@ -202,8 +202,8 @@ function mostraEventos() {
 // chamado para abrir painel com informações do evento selecionado
 function loadEvent(id) {
   var content = "";
-  for(var v in JSONcache.objects) {
-    var obj = JSONcache.objects[v];
+  for(var v in JSONcache) {
+    var obj = JSONcache[v];
     if(obj.id == id) {
       content += "<h2>" + obj.titulo + "</h2>";
       content += "<h4>" + obj.descricao + "</h4>";
