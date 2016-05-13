@@ -23,11 +23,12 @@
 </head>
 
 <body onload="onLoad()">
+  <!-- página principal -->
   <div data-role="page" id="index" data-theme="a">
     <!-- painel menu -->
     <div data-role="panel" data-position="left" data-display="push" id="menu">
       <ul data-role="listview" class="ui-listview-outer">
-        <li><a href="#calendario" data-rel="popup">Busca por data</a></li>
+        <li><a href="#btn-sobre">Sobre</a></li>
       </ul>
     </div>
     <!-- calendário -->
@@ -43,7 +44,7 @@
     <div data-role="header" data-position="fixed" data-theme="b">
       <a href="#menu" class="ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all"></a>
       <h1>Agenda Pública</h1>
-      <a href="#" onClick="carregaHoje();" class="ui-btn ui-icon-calendar ui-btn-icon-right ui-corner-all">Hoje</a>
+      <a href="#calendario" data-rel="popup" class="ui-btn ui-icon-calendar ui-btn-icon-notext ui-corner-all"></a>
     </div>
     <!-- conteúdo -->
     <div data-role="content" id="eventos">
@@ -52,6 +53,12 @@
     <div data-role="panel" data-position="right" data-display="overlay" id="info-panel">
       <div id="info">
       </div>
+    </div>
+  </div>
+  
+  <!-- página sobre -->
+  <div data-role="page" id="sobrepage" data-theme="a">
+    <div id="sobre">
     </div>
   </div>
 </body>

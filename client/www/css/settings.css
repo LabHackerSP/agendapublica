@@ -36,3 +36,7 @@
 .ui-li-static.ui-collapsible > .ui-collapsible-content {
     border-left-width: 0;
 }
+
+.ui-panel-dismiss {
+  background: rgba(0,0,0,0.5);
+}

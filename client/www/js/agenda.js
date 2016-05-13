@@ -3,6 +3,12 @@ var JSONcache = [];
 var dataSelecionada;
 // matriz[ano][mes][dia] = num eventos
 var matrizEventos = new Object();
+var datept = {
+  dayNames: [ "Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado" ],
+  dayNamesMin: [ "Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab" ],
+  monthNames: [ "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro" ],
+  monthNamesShort: [ "Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez" ]
+};
 
 $(document).on("pageinit","#index",function(){ // When entering index
   // mostraEventos usa dataSelecionada
@@ -13,12 +19,6 @@ $(document).on("pageinit","#index",function(){ // When entering index
   // um swipe right no index abre menu
   $(document).on("swiperight", "#index", openMenu);
   
-  var datept = {
-    dayNames: [ "Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado" ],
-    dayNamesMin: [ "Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab" ],
-    monthNames: [ "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro" ],
-    monthNamesShort: [ "Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez" ]
-  };
   $.datepicker.setDefaults(datept);
   
   // datepicker init
@@ -173,10 +173,11 @@ function mostraEventos() {
   console.log(result);
 
   var content = "";
+  content += '<ul data-role="listview">';
+  content += '<li><h1>' + datept.monthNames[dataSelecionada.getMonth()] + ' ' + dataSelecionada.getFullYear() + '</h1></li>';
   if(result.length < 1) {
-    content += "<p>Não há eventos para a data escolhida!</p>";
+    content += "<li><h3>Não há eventos para o mês escolhido!</h3></li>";
   } else {
-    content += '<ul data-role="listview">';
     var date = new Date(0);
     for(var v in result) {
       var obj = result[v];
@@ -193,8 +194,8 @@ function mostraEventos() {
       content += "<p class='ui-li-aside'><strong>" + obj.horario + "</strong></p>";
       content += "</a></li>";
     }
-    content += "</ul>";
   }
+  content += "</ul>";
   $("#eventos").html(content);
   $("#eventos").trigger("create");
 }
