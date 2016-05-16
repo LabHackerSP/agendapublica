@@ -242,7 +242,7 @@ function loadEvent(id) {
       content += "<p>De: " + $.datepicker.formatDate("d 'de' MM 'de' yy", new Date(obj.data_inicio)); + "</p>";
       content += "<p>Até: " + $.datepicker.formatDate("d 'de' MM 'de' yy", new Date(obj.data_fim)); + "</p>";
       content += "<p>" + obj.horario + "</p>";
-      content += "<p>Link: <a href=\"#\" onclick=\"window.open('" + obj.link + "', '_system');\">" + obj.link + "</a></p>";
+      content += "<p>Link: <a href=\"#\" onclick=\"window.open('" + obj.link + "', '_system');\">Saiba mais</a></p>";
       $("#info").html(content);
       $("#info-panel").trigger("create");
       $("#info-panel").panel("open");
