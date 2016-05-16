@@ -10,6 +10,9 @@ var datept = {
   monthNamesShort: [ "Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez" ]
 };
 
+moment().format();
+moment.locale('pt-BR');
+
 $(document).on("pageinit","#index",function(){ // When entering index
   // mostraEventos usa dataSelecionada
   // carrega eventos desse mês quando boot
@@ -104,6 +107,7 @@ function carregaAno(date, callback) {
       // matriz de dias carregados
       for(var v in result.objects) {
         var obj = result.objects[v];
+        obj.descricao = descFormat(obj.descricao);
         JSONcache.push(obj);
         var adate = new Date(obj.data_inicio);
         var eventYear = adate.getFullYear();
@@ -124,6 +128,16 @@ function carregaAno(date, callback) {
     }
   });
   return true;
+}
+
+// formatação da descrição
+String.prototype.replaceAll = function(search, replacement) {
+  var target = this;
+  return target.replace(new RegExp(search, 'g'), replacement);
+};
+
+function descFormat(text) {
+  return text.replaceAll('\n','<br \>');
 }
 
 // chamado quando clica busca no mês
@@ -174,18 +188,26 @@ function mostraEventos() {
 
   var content = "";
   content += '<ul data-role="listview">';
-  content += '<li><h1>' + datept.monthNames[dataSelecionada.getMonth()] + ' ' + dataSelecionada.getFullYear() + '</h1></li>';
+  content += '<li>';
+  content += '<h1>' + datept.monthNames[dataSelecionada.getMonth()] + ' ' + dataSelecionada.getFullYear() + '</h1>';
+  content += '</li>';
   if(result.length < 1) {
     content += "<li><h3>Não há eventos para o mês escolhido!</h3></li>";
   } else {
-    var date = new Date(0);
+    var date = moment(0);
     for(var v in result) {
       var obj = result[v];
-      var newdate = new Date(obj.data_inicio);
-      if(newdate > addDays(date, 1)) {
-        date = newdate;
-        var dateStr = $.datepicker.formatDate("d 'de' MM 'de' yy", date);
-        content += "<li data-role='list-divider' class='ui-list-count'>" + dateStr + "</li>";
+      var newdate = moment(obj.data_inicio).startOf('day');
+      if(newdate > date) {
+        date = moment(newdate).startOf('day');
+        today = moment().startOf('day');
+        var dateStr = date.format("ddd, D");
+        if(today.isSame(date)) relativeDate = "hoje";
+        else relativeDate = date.from(today);
+        content += "<li data-role='list-divider' class='ui-list-count' style='white-space: normal'>";
+        content += "<span style='display: inline; float: left;'>" + dateStr + "</span>";
+        if(relativeDate) content += "<span style='display: inline; float: right;'>" + relativeDate + "</span>";
+        content += "</li>";
       }
       content += "<li><a href='#' onClick='loadEvent(" + obj.id + ");'>";
       content += "<h2 class='event-title event-overflow'>" + obj.titulo + "</h2>";
@@ -199,8 +221,11 @@ function mostraEventos() {
   $("#eventos").html(content);
   $("#eventos").trigger("create");
   $(".event-overflow").css('white-space', 'normal');
-  $(".event-title").css('max-height', parseFloat($(".event-title").css('line-height').replace('px',''))*2 + 'px'); // limita pra 2 linhas
-  $(".event-desc").css('max-height', parseFloat($(".event-desc").css('line-height').replace('px',''))*4 + 'px'); // limita pra 4 linhas
+  // limita título pra 2 linhas
+  $(".event-title").css('max-height', parseFloat($(".event-title").css('line-height').replace('px',''))*2 + 'px');
+  // limita descrição pra 4 linhas
+  $(".event-desc").css('max-height', parseFloat($(".event-desc").css('line-height').replace('px',''))*4 + 'px');
+  // trunca
   $(".event-overflow").dotdotdot();
 }
 
