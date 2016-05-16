@@ -223,6 +223,8 @@ function mostraEventos() {
   $(".event-overflow").css('white-space', 'normal');
   // limita título pra 2 linhas
   $(".event-title").css('max-height', parseFloat($(".event-title").css('line-height').replace('px',''))*2 + 'px');
+  // conserta overlap com horário
+  $(".event-title").css('margin-right', '2.5em');
   // limita descrição pra 4 linhas
   $(".event-desc").css('max-height', parseFloat($(".event-desc").css('line-height').replace('px',''))*4 + 'px');
   // trunca
