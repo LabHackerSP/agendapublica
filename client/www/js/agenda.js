@@ -188,8 +188,8 @@ function mostraEventos() {
         content += "<li data-role='list-divider' class='ui-list-count'>" + dateStr + "</li>";
       }
       content += "<li><a href='#' onClick='loadEvent(" + obj.id + ");'>";
-      content += "<h2>" + obj.titulo + "</h2>";
-      content += "<p><strong>" + obj.descricao + "</strong></p>";
+      content += "<h2 class='event-title event-overflow'>" + obj.titulo + "</h2>";
+      content += "<p class='event-desc event-overflow'><strong>" + obj.descricao + "</strong></p>";
       content += "<p>" + obj.local + "</p>";
       content += "<p class='ui-li-aside'><strong>" + obj.horario + "</strong></p>";
       content += "</a></li>";
@@ -198,6 +198,10 @@ function mostraEventos() {
   content += "</ul>";
   $("#eventos").html(content);
   $("#eventos").trigger("create");
+  $(".event-overflow").css('white-space', 'normal');
+  $(".event-title").css('max-height', parseFloat($(".event-title").css('line-height').replace('px',''))*2 + 'px'); // limita pra 2 linhas
+  $(".event-desc").css('max-height', parseFloat($(".event-desc").css('line-height').replace('px',''))*4 + 'px'); // limita pra 4 linhas
+  $(".event-overflow").dotdotdot();
 }
 
 // chamado para abrir painel com informações do evento selecionado

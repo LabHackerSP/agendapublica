@@ -37,6 +37,8 @@
     border-left-width: 0;
 }
 
+/* tweaks meus -erin */
+/* fundo esmaecido para paineis */
 .ui-panel-dismiss {
   background: rgba(0,0,0,0.5);
 }
