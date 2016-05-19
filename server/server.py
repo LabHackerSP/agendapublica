@@ -6,15 +6,19 @@ from flask_sqlalchemy import SQLAlchemy
 import flask.ext.restless
 from flask.ext.cors import CORS
 from datetime import datetime
+from settings import *
 
 
 app = Flask(__name__)
+
+#Config
 CORS(app)
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
-app.config['SQLALCHEMY_ECHO'] = True
-app.config['SECRET_KEY'] = '123456790'
-
+app.config['SQLALCHEMY_DATABASE_URI'] = SETTINGS['SQLALCHEMY_DATABASE_URI']
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = SETTINGS['SECRET_KEY']
+if SETTINGS['DEBUG']:
+    app.config['SQLALCHEMY_ECHO'] = True
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 db = SQLAlchemy(app)
 
