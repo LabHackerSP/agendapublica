@@ -20,6 +20,7 @@
   <script src="js/jquery.mobile.datepicker.js"></script>
   <script src="js/jquery.dotdotdot.min.js"></script>
   <script src="js/moment-with-locales.min.js"></script>
+  <script src="js/handlebars-v4.0.5.js"></script>
   <script src="js/agenda.js"></script>
 </head>
 
@@ -49,10 +50,48 @@
     </div>
     <!-- conteúdo -->
     <div data-role="content" id="eventos">
+      <script id="eventos-template" type="text/x-handlebars-template">
+        <ul data-role="listview">
+          <li><h1>{{mes}}</h1></li>
+          {{#each eventos}}
+            <li data-role='list-divider' class='ui-list-count' style='white-space: normal'>
+            <span style='display: inline; float: left;'>{{formataDia @key}}</span>
+            <span style='display: inline; float: right;'>{{formataRelativo @key}}</span>
+            </li>
+            {{#each this}}
+              <li><a href='#' onClick='loadEvent({{@../key}},{{id}});'>
+              <h2 class='event-title event-overflow'>{{titulo}}</h2>
+              <p class='event-desc event-overflow'><strong>{{formataDescricao descricao}}</strong></p>
+              <p>{{local}}</p>
+              <p class='ui-li-aside'><strong>{{horario}}</strong></p>
+              </a></li>
+            {{/each}}
+          {{else}}
+            <li><h3>Não há eventos para o mês escolhido!</h3></li>
+          {{/each}}
+        </ul>
+      </script>
     </div>
     <!-- painel de evento -->
     <div data-role="panel" data-position="right" data-display="overlay" id="info-panel">
       <div id="info">
+        <script id="info-template" type="text/x-handlebars-template">
+          <h2>{{titulo}}</h2>
+          <h4>{{formataDescricao descricao}}</h4>
+          <p>{{local}}</p>
+          <p>{{endereco}}</p>
+          {{#if_mesmoDia data_inicio data_fim}}
+            <p>Quando: {{formataData data_inicio}}</p>
+          {{else}}
+            <p>Quando: {{formataData data_inicio}} até {{formataData data_fim}}</p>
+          {{/if_mesmoDia}}
+          {{#if_mesmaHora data_inicio data_fim}}
+            <p>Horário: {{formataHora data_inicio}}</p>
+          {{else}}
+            <p>Horário: {{formataHora data_inicio}} até {{formataHora data_fim}}</p>
+          {{/if_mesmaHora}}
+          <p><a href="#" onclick="window.open('{{link}}', '_system');">Saiba mais</a></p>
+        </script>
       </div>
     </div>
   </div>

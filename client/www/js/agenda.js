@@ -1,8 +1,10 @@
 SERVER = "http://labhacker.org.br:5000/api/evento";
-var JSONcache = [];
-var dataSelecionada;
-// matriz[ano][mes][dia] = num eventos
+var dataSelecionada = new Date(); // data usada para mostrar eventos
+
 var matrizEventos = new Object();
+var eventos = new Object(); // cache de eventos organizados por data
+
+//deprecated
 var datept = {
   dayNames: [ "Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado" ],
   dayNamesMin: [ "Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab" ],
@@ -13,10 +15,50 @@ var datept = {
 moment().format();
 moment.locale('pt-BR');
 
+// inicialização handlebars
+var eventoHandler;
+var infoHandler;
+Handlebars.registerHelper('formataDia', function(data) {
+  return moment(data).format("ddd, D");
+});
+
+Handlebars.registerHelper('formataRelativo', function(data) {
+  var data = moment(data);
+  var today = moment().startOf('day');
+  if(today.isSame(data)) return "hoje";
+  else return data.from(today);
+});
+
+Handlebars.registerHelper('formataDescricao', function(text) {
+  return new Handlebars.SafeString(descFormat(text));
+});
+
+Handlebars.registerHelper('formataData', function(data) {
+  console.log(data);
+  return data.format('dddd, LL');
+});
+
+Handlebars.registerHelper('formataHora', function(data) {
+  return data.format('LT');
+});
+
+Handlebars.registerHelper('if_mesmoDia', function(a, b, block) {
+  var data1 = moment(a).startOf('day');
+  var data2 = moment(b).startOf('day');
+  return data1.isSame(data2)
+   ? block.fn(this)
+   : block.inverse(this);
+});
+
+Handlebars.registerHelper('if_mesmaHora', function(a, b, block) {
+  return a.isSame(b)
+   ? block.fn(this)
+   : block.inverse(this);
+});
+
+// inicialização da página
 $(document).on("pageinit","#index",function(){ // When entering index
-  // mostraEventos usa dataSelecionada
   // carrega eventos desse mês quando boot
-  dataSelecionada = new Date();
   carregaAno(null, mostraEventos);
   
   // um swipe right no index abre menu
@@ -30,6 +72,9 @@ $(document).on("pageinit","#index",function(){ // When entering index
     onChangeMonthYear: updateMonth,
     beforeShowDay: markDates
   });
+  
+  eventoHandler = Handlebars.compile($("#eventos-template").html());
+  infoHandler = Handlebars.compile($("#info-template").html());
 });
 
 function onLoad() {
@@ -103,23 +148,7 @@ function carregaAno(date, callback) {
       }, 1);
     },
     success: function (result) {
-      //parseJSON(result);
-      // matriz de dias carregados
-      for(var v in result.objects) {
-        var obj = result.objects[v];
-        obj.descricao = descFormat(obj.descricao);
-        JSONcache.push(obj);
-        var adate = new Date(obj.data_inicio);
-        var eventYear = adate.getFullYear();
-        var eventMonth = adate.getMonth()+1;
-        if(matrizEventos[eventYear] == null) matrizEventos[eventYear] = new Object();
-        if(matrizEventos[eventYear][eventMonth] == null) matrizEventos[eventYear][eventMonth] = new Array();
-        matrizEventos[adate.getFullYear()][adate.getMonth()+1].push(adate.getDate());
-        console.log(matrizEventos[eventYear]);
-      }
-      
-      $("#data").date("refresh");
-      
+      parseJSON(result);
       callback();
     },
     error: function (request,error) {
@@ -128,6 +157,38 @@ function carregaAno(date, callback) {
     }
   });
   return true;
+}
+
+// enumerador de dias
+var enumerateDaysBetweenDates = function(startDate, endDate) {
+    var dates = [];
+
+    var currDate = startDate.clone().startOf('day');
+    var lastDate = endDate.clone().startOf('day');
+    dates.push(currDate.clone().toDate()); // inicia com o primeiro (inclusivo)
+    while(currDate.add(1, 'days').diff(lastDate) <= 0) { // <=, último dia inclusivo
+        //console.log(currDate.toDate());
+        dates.push(currDate.clone().toDate());
+    }
+
+    return dates;
+};
+
+// formata json em lista de dias
+function parseJSON(result) {
+  for(var v in result.objects) {
+    var obj = result.objects[v];
+    obj.data_inicio = moment(obj.data_inicio);
+    obj.data_fim = moment(obj.data_fim);
+    var dateRange = enumerateDaysBetweenDates(obj.data_inicio, obj.data_fim); // dá lista de dias entre datas
+    
+    for(var day in dateRange) {
+      var date = moment(dateRange[day]).format('YYYYMMDD');
+      if(!(date in eventos)) eventos[date] = []; // cria dia em lista de eventos se não existe
+      eventos[date].push(obj); // insere no dia
+    }
+  }
+  $("#data").date("refresh"); // atualiza marcações no calendário
 }
 
 // formatação da descrição
@@ -149,103 +210,52 @@ function carregaBusca() {
   mostraEventos();
 }
 
-// retorna data x dias no futuro
-function addDays(date, days) {
-    var result = new Date(date);
-    result.setDate(date.getDate() + days);
-    return result;
-}
-
-function filtraEventos(startDate, endDate) {
-  var out = [];
-  for(v in JSONcache) {
-    var obj = JSONcache[v];
-    var eventDate = new Date(obj.data_inicio);
-    console.log(eventDate);
-    if(eventDate >= startDate && eventDate <= endDate) {
-      out.push(obj);
-    }
-  }
-  return out;
-}
-
 // chamado para atualizar eventos no index
 function mostraEventos() {
   // result precisa conter apenas eventos a serem mostrados (filtrar mês selecionado)
-  // JSONcache deve conter todos os eventos baixados (geralmente, todo o ano atual)
+  // eventos deve conter todos os eventos baixados (geralmente, todo o ano atual)
+  var data = moment(dataSelecionada);
   
-  var startDate = new Date(dataSelecionada.getFullYear(), dataSelecionada.getMonth(), 1);
-  var endDate = new Date(dataSelecionada.getFullYear(), dataSelecionada.getMonth()+1, 0);
+  var startDate = data.startOf('month').format('YYYYMMDD');
+  var endDate = data.endOf('month').format('YYYYMMDD');
   
-  console.log(startDate);
-  console.log(endDate);
-  
-  console.log(JSONcache);
-  
-  var result = filtraEventos(startDate, endDate);
-  
-  console.log(result);
-
-  var content = "";
-  content += '<ul data-role="listview">';
-  content += '<li>';
-  content += '<h1>' + datept.monthNames[dataSelecionada.getMonth()] + ' ' + dataSelecionada.getFullYear() + '</h1>';
-  content += '</li>';
-  if(result.length < 1) {
-    content += "<li><h3>Não há eventos para o mês escolhido!</h3></li>";
-  } else {
-    var date = moment(0);
-    for(var v in result) {
-      var obj = result[v];
-      var newdate = moment(obj.data_inicio).startOf('day');
-      if(newdate > date) {
-        date = moment(newdate).startOf('day');
-        today = moment().startOf('day');
-        var dateStr = date.format("ddd, D");
-        if(today.isSame(date)) relativeDate = "hoje";
-        else relativeDate = date.from(today);
-        content += "<li data-role='list-divider' class='ui-list-count' style='white-space: normal'>";
-        content += "<span style='display: inline; float: left;'>" + dateStr + "</span>";
-        if(relativeDate) content += "<span style='display: inline; float: right;'>" + relativeDate + "</span>";
-        content += "</li>";
-      }
-      content += "<li><a href='#' onClick='loadEvent(" + obj.id + ");'>";
-      content += "<h2 class='event-title event-overflow'>" + obj.titulo + "</h2>";
-      content += "<p class='event-desc event-overflow'><strong>" + obj.descricao + "</strong></p>";
-      content += "<p>" + obj.local + "</p>";
-      content += "<p class='ui-li-aside'><strong>" + obj.horario + "</strong></p>";
-      content += "</a></li>";
-    }
+  var result = {
+    mes: data.format('MMMM YYYY'),
+    eventos: {}
+  };
+  for(var v in eventos) {
+    if(v >= startDate && v <= endDate) result["eventos"][v] = eventos[v];
   }
-  content += "</ul>";
-  $("#eventos").html(content);
+  
+  $("#eventos").html(eventoHandler(result));
   $("#eventos").trigger("create");
-  $(".event-overflow").css('white-space', 'normal');
-  // limita título pra 2 linhas
-  $(".event-title").css('max-height', parseFloat($(".event-title").css('line-height').replace('px',''))*2 + 'px');
-  // conserta overlap com horário
-  $(".event-title").css('margin-right', '2.5em');
+  
+  var eventOverflow = $(".event-overflow");
+  var eventTitle = $(".event-title");
+  var eventDesc = $(".event-desc");
+  if(eventTitle.length > 0) {
+    // limita título pra 2 linhas
+    eventTitle.css('max-height', parseFloat($(".event-title").css('line-height').replace('px',''))*2 + 'px');
+    // conserta overlap com horário
+    eventTitle.css('margin-right', '2.5em');
+  }
   // limita descrição pra 4 linhas
-  $(".event-desc").css('max-height', parseFloat($(".event-desc").css('line-height').replace('px',''))*4 + 'px');
-  // trunca
-  $(".event-overflow").dotdotdot();
+  if(eventDesc.length > 0) eventDesc.css('max-height', parseFloat($(".event-desc").css('line-height').replace('px',''))*4 + 'px');
+  if(eventOverflow.length > 0) {
+    // trunca
+    eventOverflow.css('white-space', 'normal');
+    eventOverflow.dotdotdot();
+  }
 }
 
 // chamado para abrir painel com informações do evento selecionado
-function loadEvent(id) {
+function loadEvent(data, id) {
   var content = "";
-  for(var v in JSONcache) {
-    var obj = JSONcache[v];
+  for(var v in eventos[data]) {
+    var obj = eventos[data][v];
     if(obj.id == id) {
-      content += "<h2>" + obj.titulo + "</h2>";
-      content += "<h4>" + obj.descricao + "</h4>";
-      content += "<p>" + obj.local + "</p>";
-      content += "<p>" + obj.endereco + "</p>";
-      content += "<p>De: " + $.datepicker.formatDate("d 'de' MM 'de' yy", new Date(obj.data_inicio)); + "</p>";
-      content += "<p>Até: " + $.datepicker.formatDate("d 'de' MM 'de' yy", new Date(obj.data_fim)); + "</p>";
-      content += "<p>" + obj.horario + "</p>";
-      content += "<p>Link: <a href=\"#\" onclick=\"window.open('" + obj.link + "', '_system');\">Saiba mais</a></p>";
-      $("#info").html(content);
+      console.log(infoHandler(obj));
+      $("#info").html(infoHandler(obj));
       $("#info-panel").trigger("create");
       $("#info-panel").panel("open");
       return;
@@ -263,10 +273,9 @@ function updateMonth(year, month, inst) {
 
 // chamado a cada dia do calendário para marcar os que têm eventos
 function markDates(date) {
-  if(matrizEventos[date.getFullYear()] != null && matrizEventos[date.getFullYear()][date.getMonth()+1] != null) {
-    if(matrizEventos[date.getFullYear()][date.getMonth()+1].indexOf(date.getDate()) > -1) { //se há evento no dia
-      return [false, 'ui-state-highlight'];
-    }
+  var formattedDate = moment(date).format('YYYYMMDD');
+  if(formattedDate in eventos) {
+    return [false, 'ui-state-highlight'];
   }
   return false;
 }
