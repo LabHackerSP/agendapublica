@@ -18,7 +18,7 @@ app = Flask(__name__)
 
 #Config
 CORS(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = SETTINGS['DATABASE']
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///" + SETTINGS['DATABASE']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = SETTINGS['SECRET_KEY']
 if SETTINGS['DEBUG']:
@@ -40,7 +40,7 @@ rolesusers_table = db.Table(
 
 class Role(db.Model, RoleMixin):
     id = db.Column(db.Integer(), primary_key=True)
-    name = db.Column(db.String(80), unique=True)
+    name = db.Column(db.String(255), unique=True)
     description = db.Column(db.String(255))
 
     def __repr__(self):
@@ -48,32 +48,32 @@ class Role(db.Model, RoleMixin):
 
 class Orgao(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    nome = db.Column(db.String(80))
+    nome = db.Column(db.String(255))
 
     def __repr__(self):
         return self.nome
 
 class Tipo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    tipo = db.Column(db.String(80))
+    tipo = db.Column(db.String(255))
     
     def __repr__(self):
         return self.tipo
 
 class Tag(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    tag = db.Column(db.String(80))
+    tag = db.Column(db.String(255))
 
     def __repr__(self):
         return self.tag
 
 class Responsavel(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    nome = db.Column(db.String(80))
+    nome = db.Column(db.String(255))
     orgao_id = db.Column(db.Integer, db.ForeignKey('orgao.id'))
     orgao = db.relationship('Orgao')
-    email = db.Column(db.String(80), unique=True)
-    tel = db.Column(db.String(80))
+    email = db.Column(db.String(255), unique=True)
+    tel = db.Column(db.String(255))
     data_registro = db.Column(db.DateTime)
     password = db.Column(db.String(255))
     active = db.Column(db.Boolean())
@@ -86,22 +86,22 @@ class Responsavel(db.Model, UserMixin):
 
 class Evento(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    titulo = db.Column(db.String(80), unique=False)
-    local = db.Column(db.String(120), unique=False)
+    titulo = db.Column(db.String(255), unique=False)
+    local = db.Column(db.String(255), unique=False)
     orgao_id = db.Column(db.Integer, db.ForeignKey('orgao.id'))
     orgao = db.relationship('Orgao')
     responsavel_id = db.Column(db.Integer, db.ForeignKey('responsavel.id'))
     responsavel = db.relationship('Responsavel')
     tipo_id = db.Column(db.Integer, db.ForeignKey('tipo.id'))
     tipo = db.relationship('Tipo')
-    local = db.Column(db.String(120))
-    endereco = db.Column(db.String(120))
+    local = db.Column(db.String(255))
+    endereco = db.Column(db.String(255))
     data_inicio = db.Column(db.DateTime)
     data_fim = db.Column(db.DateTime)
-    horario = db.Column(db.String(80))
+    horario = db.Column(db.String(255))
     descricao = db.Column(db.Text)
-    link = db.Column(db.String(120))
-    cartaz = db.Column(db.String(120))
+    link = db.Column(db.String(255))
+    cartaz = db.Column(db.String(255))
     tags = db.relationship('Tag', secondary=tagevento_table)
 
     def __repr__(self):
