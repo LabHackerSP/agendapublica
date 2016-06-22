@@ -18,9 +18,15 @@
     <allow-intent href="geo:*" />
     <platform name="android">
         <allow-intent href="market:*" />
+        
+        <splash src="res/screen/android/HDPI.png" density="port-hdpi"/>
+        <splash src="res/screen/android/LDPI.png" density="port-ldpi"/>
+        <splash src="res/screen/android/MDPI.png" density="port-mdpi"/>
+        <splash src="res/screen/android/XHDPI.png" density="port-xhdpi"/>
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
     </platform>
+    <preference name="AutoHideSplashScreen" value="false" />
 </widget>

@@ -87,6 +87,8 @@ function onDeviceReady() {
   document.addEventListener("backbutton", closeMenus, false);
   navigator.app.overrideButton("menubutton", true);
   document.addEventListener("menubutton", openMenu, false);
+  
+  navigator.splashscreen.hide();
 }
 
 function closeMenus() {
