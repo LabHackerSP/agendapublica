@@ -19,10 +19,14 @@
     <platform name="android">
         <allow-intent href="market:*" />
         
-        <splash src="res/screen/android/HDPI.png" density="port-hdpi"/>
-        <splash src="res/screen/android/LDPI.png" density="port-ldpi"/>
-        <splash src="res/screen/android/MDPI.png" density="port-mdpi"/>
-        <splash src="res/screen/android/XHDPI.png" density="port-xhdpi"/>
+        <splash src="res/android/HDPI.png" density="port-hdpi"/>
+        <splash src="res/android/LDPI.png" density="port-ldpi"/>
+        <splash src="res/android/MDPI.png" density="port-mdpi"/>
+        <splash src="res/android/XHDPI.png" density="port-xhdpi"/>
+        
+        <icon src="res/android/ico-MDPI.png" density="mdpi" />
+        <icon src="res/android/ico-HPDI.png" density="hdpi" />
+        <icon src="res/android/ico-XHDPI.png" density="xhdpi" />
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
@@ -31,4 +35,5 @@
     <preference name="AutoHideSplashScreen" value="false" />
     <preference name="ShowSplashScreenSpinner" value="false" />
     <preference name="BackgroundColor" value="0xffffd700" />
+    <preference name="SplashMaintainAspectRatio" value="true" />
 </widget>
