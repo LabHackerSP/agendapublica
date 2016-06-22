@@ -29,4 +29,6 @@
         <allow-intent href="itms-apps:*" />
     </platform>
     <preference name="AutoHideSplashScreen" value="false" />
+    <preference name="ShowSplashScreenSpinner" value="false" />
+    <preference name="BackgroundColor" value="0xffffd700" />
 </widget>

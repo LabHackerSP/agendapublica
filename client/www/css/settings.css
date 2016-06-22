@@ -42,3 +42,7 @@
 .ui-panel-dismiss {
   background: rgba(0,0,0,0.5);
 }
+
+body {
+  font-family: 'Ubuntu', sans-serif;
+}
