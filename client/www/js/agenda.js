@@ -1,7 +1,7 @@
 SERVER = "http://labhacker.org.br:5000/api/evento";
 var dataSelecionada = new Date(); // data usada para mostrar eventos
 
-var matrizEventos = new Object();
+//var matrizEventos = new Object(); // deprecated
 var eventos = new Object(); // cache de eventos organizados por data
 
 //deprecated
@@ -63,6 +63,13 @@ $(document).on("pageinit","#index",function(){ // When initializing index
   
   // um swipe right no index abre menu
   $(document).on("swiperight", "#index", openMenu);
+  
+  // botão refresh
+  $("#btn-refresh").bind("click", function(event, ui) {
+    closeMenus();
+    eventos = new Object();
+    carregaAno(null, mostraEventos);
+  });
   
   $.datepicker.setDefaults(datept);
   
