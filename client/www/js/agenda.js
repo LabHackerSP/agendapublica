@@ -57,7 +57,7 @@ Handlebars.registerHelper('if_mesmaHora', function(a, b, block) {
 });
 
 // inicialização da página
-$(document).on("pageinit","#index",function(){ // When entering index
+$(document).on("pageinit","#index",function(){ // When initializing index
   // carrega eventos desse mês quando boot
   carregaAno(null, mostraEventos);
   
@@ -75,6 +75,20 @@ $(document).on("pageinit","#index",function(){ // When entering index
   
   eventoHandler = Handlebars.compile($("#eventos-template").html());
   infoHandler = Handlebars.compile($("#info-template").html());
+  
+  $("#info-panel").on("panelbeforeopen", function( event, ui ) { $("#info-panel").toggleClass('ui-panel-dismiss-beforeopen'); } );
+});
+
+// back sai do sobre quando vai pro sobre
+$(document).on("pagebeforeshow","#sobrepage",function(){
+  document.removeEventListener("backbutton", closeMenus);
+  document.addEventListener("backbutton", gotoIndex, false);
+});
+
+// back fecha menus quando volta pro index
+$(document).on("pagebeforeshow","#index",function(){
+  document.removeEventListener("backbutton", gotoIndex);
+  document.addEventListener("backbutton", closeMenus, false);
 });
 
 function onLoad() {
@@ -105,6 +119,10 @@ function openMenu() {
   if($.mobile.activePage.jqmData("panel") !== "open") {
     $("#menu").panel("open");
   }
+}
+
+function gotoIndex() {
+  $.mobile.changePage("#index");
 }
 
 // carrega um ano inteiro do DB para o cache JSON

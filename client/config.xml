@@ -25,7 +25,7 @@
         <splash src="res/android/XHDPI.png" density="port-xhdpi"/>
         
         <icon src="res/android/ico-MDPI.png" density="mdpi" />
-        <icon src="res/android/ico-HPDI.png" density="hdpi" />
+        <icon src="res/android/ico-HDPI.png" density="hdpi" />
         <icon src="res/android/ico-XHDPI.png" density="xhdpi" />
     </platform>
     <platform name="ios">
@@ -35,5 +35,7 @@
     <preference name="AutoHideSplashScreen" value="false" />
     <preference name="ShowSplashScreenSpinner" value="false" />
     <preference name="BackgroundColor" value="0xffffd700" />
+    <preference name="backgroundColor" value="0xffffd700" />
+    <preference name="SplashScreenBackgroundColor" value="0xffffd700" />
     <preference name="SplashMaintainAspectRatio" value="true" />
 </widget>

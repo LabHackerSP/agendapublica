@@ -40,7 +40,17 @@
 /* tweaks meus -erin */
 /* fundo esmaecido para paineis */
 .ui-panel-dismiss {
-  background: rgba(0,0,0,0.5);
+  transition: 0.4s ease-in-out;
+}
+
+.ui-panel-dismiss-beforeopen {
+  display: block;
+}
+
+.ui-panel-dismiss-open {
+  background: #000000;
+  opacity: 0.5;
+  z-index: 1000;
 }
 
 body {
