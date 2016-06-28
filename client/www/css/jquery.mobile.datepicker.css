@@ -81,9 +81,9 @@ div.hasDatepicker {
 .ui-datepicker td {
 	border-width: 1px;
 	padding: 0;
-	border-style: solid;
+	border-style: none;
 	text-align: center;
-	min-width: 41px;
+	min-width: 40px;
 }
 .ui-datepicker td span,
 .ui-datepicker a {
@@ -91,7 +91,7 @@ div.hasDatepicker {
 	text-align: center;
 	text-decoration: none;
 	/* from .ui-btn class */
-	font-size: 16px;
+	font-size: 0.9em;
 	position: relative;
 	text-overflow: ellipsis;
 	overflow: hidden;
@@ -104,7 +104,7 @@ div.hasDatepicker {
 	text-decoration: none !important;
 	font-weight: bold;
 	border-width: 1px;
-	border-style: solid;
+	border-style: none;
 }
 .ui-datepicker td a {
 	padding: .2em 0;
