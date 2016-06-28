@@ -83,6 +83,9 @@ $(document).on("pageinit","#index",function(){ // When initializing index
   eventoHandler = Handlebars.compile($("#eventos-template").html());
   infoHandler = Handlebars.compile($("#info-template").html());
   
+  //page transition fade é feia
+  $.mobile.defaultPageTransition = "slide";
+  
   $("#info-panel").on("panelbeforeopen", function( event, ui ) { $("#info-panel").toggleClass('ui-panel-dismiss-beforeopen'); } );
 });
 

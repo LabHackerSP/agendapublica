@@ -39,7 +39,7 @@
 
 /* tweaks meus -erin */
 /* fundo esmaecido para paineis */
-.ui-panel-dismiss {
+/*.ui-panel-dismiss {
   transition: 0.4s ease-in-out;
 }
 
@@ -51,7 +51,7 @@
   background: #000000;
   opacity: 0.5;
   z-index: 1000;
-}
+}*/
 
 body {
   font-family: 'Ubuntu', sans-serif;
