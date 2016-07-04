@@ -56,6 +56,11 @@ Handlebars.registerHelper('if_mesmaHora', function(a, b, block) {
    : block.inverse(this);
 });
 
+// init fastclick
+$(function() {
+  FastClick.attach(document.body);
+});
+
 // inicialização da página
 $(document).on("pageinit","#index",function(){ // When initializing index
   // um swipe right no index abre menu
