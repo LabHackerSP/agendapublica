@@ -56,3 +56,5 @@
 body {
   font-family: 'Ubuntu', sans-serif;
 }
+
+#header a{height:50px;width:50px;}

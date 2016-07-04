@@ -32,20 +32,20 @@
     <div data-role="panel" data-position="left" data-display="push" id="menu">
       <ul data-role="listview" class="ui-listview-outer">
         <li><a href="#sobrepage">Sobre</a></li>
-        <li><a href="#" id="btn-refresh">Recarregar eventos</a></li>
+        <li><a href="#" onClick="eventoRefresh();">Recarregar eventos</a></li>
       </ul>
     </div>
     <!-- calendário -->
     <div data-role="popup" id="calendario">
       <div>
-        <input id="data" type="hidden" data-inline="true" />
+        <input id="data" onChange="selecionaData()" type="hidden" data-inline="true" />
       </div>
       <div>
-        <a href="#" class="ui-btn ui-corner-all ui-shadow" style="margin: .5em;" onClick="carregaBusca();">Exibir mês</a>
+        <a href="#" class="ui-btn ui-corner-all ui-shadow" style="margin: .5em;" onClick="carregaBusca(false);">Exibir mês</a>
       </div>
     </div>
     <!-- header -->
-    <div data-role="header" data-position="fixed" data-theme="b">
+    <div data-role="header" class="header" data-position="fixed" data-theme="b">
       <a href="#menu" class="ui-btn ui-icon-bars ui-btn-icon-notext ui-corner-all"></a>
       <h1>Agenda Pública</h1>
       <a href="#calendario" data-rel="popup" class="ui-btn ui-icon-calendar ui-btn-icon-notext ui-corner-all"></a>
@@ -56,7 +56,7 @@
         <ul data-role="listview">
           <li><h1>{{mes}}</h1></li>
           {{#each eventos}}
-            <li data-role='list-divider' class='ui-list-count' style='white-space: normal'>
+            <li id='{{@key}}' data-role='list-divider' class='ui-list-count' style='white-space: normal'>
             <span style='display: inline; float: left;'>{{formataDia @key}}</span>
             <span style='display: inline; float: right;'>{{formataRelativo @key}}</span>
             </li>

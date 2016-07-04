@@ -34,7 +34,7 @@ Handlebars.registerHelper('formataDescricao', function(text) {
 });
 
 Handlebars.registerHelper('formataData', function(data) {
-  console.log(data);
+  //console.log(data);
   return data.format('dddd, LL');
 });
 
@@ -58,26 +58,17 @@ Handlebars.registerHelper('if_mesmaHora', function(a, b, block) {
 
 // inicialização da página
 $(document).on("pageinit","#index",function(){ // When initializing index
-  // carrega eventos desse mês quando boot
-  carregaAno(null, mostraEventos);
-  
   // um swipe right no index abre menu
   $(document).on("swiperight", "#index", openMenu);
   
-  // botão refresh
-  $("#btn-refresh").bind("click", function(event, ui) {
-    closeMenus();
-    eventos = new Object();
-    carregaAno(null, mostraEventos);
-  });
-  
   $.datepicker.setDefaults(datept);
   
-  // datepicker init
+  // inicialização datepicker
   $("#data").date({
     constrainInput: true,
     onChangeMonthYear: updateMonth,
-    beforeShowDay: markDates
+    beforeShowDay: markDates,
+    onSelect: selecionaData
   });
   
   eventoHandler = Handlebars.compile($("#eventos-template").html());
@@ -87,6 +78,9 @@ $(document).on("pageinit","#index",function(){ // When initializing index
   $.mobile.defaultPageTransition = "slide";
   
   $("#info-panel").on("panelbeforeopen", function( event, ui ) { $("#info-panel").toggleClass('ui-panel-dismiss-beforeopen'); } );
+
+  // carrega eventos desse mês
+  carregaAno(null, mostraEventos);
 });
 
 // back sai do sobre quando vai pro sobre
@@ -135,6 +129,12 @@ function gotoIndex() {
   $.mobile.changePage("#index");
 }
 
+function eventoRefresh() {
+  closeMenus();
+  eventos = new Object();
+  carregaAno(null, mostraEventos);
+}
+
 // carrega um ano inteiro do DB para o cache JSON
 // date = ano, callback = função a rodar quando sucesso
 function carregaAno(date, callback) {
@@ -160,7 +160,7 @@ function carregaAno(date, callback) {
   }
   
   var url = SERVER + "?q=" + JSON.stringify(query);
-  console.log(url);
+  //console.log(url);
 
   $.ajax({
     url: url,
@@ -232,19 +232,22 @@ function descFormat(text) {
 }
 
 // chamado quando clica busca no mês
-function carregaBusca() {
-  $("[data-role=panel]").panel("close");
+// scroll - boolean que diz se faz scroll ou não
+function carregaBusca(scroll) {
+  //$("[data-role=panel]").panel("close");
   $("[data-role=popup]").popup("close");
   //carregaEventos($('#data').date('getDate'));
-  console.log(dataSelecionada);
-  mostraEventos();
+  mostraEventos(scroll);
 }
 
 // chamado para atualizar eventos no index
-function mostraEventos() {
+// scroll - boolean que diz se faz scroll ou não
+function mostraEventos(scroll) {
   // result precisa conter apenas eventos a serem mostrados (filtrar mês selecionado)
   // eventos deve conter todos os eventos baixados (geralmente, todo o ano atual)
   var data = moment(dataSelecionada);
+  
+  var stringDia = data.format('YYYYMMDD');
   
   var startDate = data.startOf('month').format('YYYYMMDD');
   var endDate = data.endOf('month').format('YYYYMMDD');
@@ -276,6 +279,18 @@ function mostraEventos() {
     eventOverflow.css('white-space', 'normal');
     eventOverflow.dotdotdot();
   }
+  
+  //scroll para dia selecionado
+  if(scroll == true) {
+    console.log(stringDia);
+    var elementoDia = $('#'+stringDia);
+    console.log(elementoDia);
+    if(elementoDia != null) {
+      $('html, body').animate({
+          scrollTop: elementoDia.offset().top - $('.header').height()
+      }, 600);
+    }
+  }
 }
 
 // chamado para abrir painel com informações do evento selecionado
@@ -284,7 +299,7 @@ function loadEvent(data, id) {
   for(var v in eventos[data]) {
     var obj = eventos[data][v];
     if(obj.id == id) {
-      console.log(infoHandler(obj));
+      //console.log(infoHandler(obj));
       $("#info").html(infoHandler(obj));
       $("#info-panel").trigger("create");
       $("#info-panel").panel("open");
@@ -298,14 +313,23 @@ function loadEvent(data, id) {
 // chamado quando usuário muda mês no calendário
 function updateMonth(year, month, inst) {
   // TODO: checa se ano está carregado
-  dataSelecionada = new Date(year, month-1, 01);
+  if(month != dataSelecionada.getMonth()+1) {
+    dataSelecionada = new Date(year, month-1, 01);
+  }
+}
+
+// chamado quando dia é clicado no datepicker
+function selecionaData(val) {
+  dataSelecionada = new Date(val);
+  // já chama o mês
+  carregaBusca(true);
 }
 
 // chamado a cada dia do calendário para marcar os que têm eventos
 function markDates(date) {
   var formattedDate = moment(date).format('YYYYMMDD');
   if(formattedDate in eventos) {
-    return [false, 'ui-state-highlight'];
+    return [true, 'ui-state-evento'];
   }
-  return false;
+  return [false, ''];
 }
