@@ -112,6 +112,10 @@ function onDeviceReady() {
   document.addEventListener("menubutton", openMenu, false);
   
   navigator.splashscreen.hide();
+  
+  // mostra versão em sobre
+  $('.version').text(AppVersion.version);
+  $('.build').text(AppVersion.build);
 }
 
 function closeMenus() {
