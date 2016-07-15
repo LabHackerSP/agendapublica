@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% block nav %}
+<li role="presentation" class="active">Index</li>
+{% endblock %}
+{% block body %}
+  <form action="" method=post class="form-horizontal">
+  
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <p style="color: red; font-weight: bold;">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <h2>Login</h2>
+    <div class="control-group">
+        <div class="controls">
+          <input type="text" id="email" name="email" class="input-xlarge"
+            placeholder="Nome de usuário" required>
+        </div>
+    </div>
+ 
+    <div class="control-group">
+        <div class="controls">
+          <input type="password" id="password" name="password" class="input-xlarge"
+            placeholder="Senha" required>
+        </div>
+    </div>
+ 
+    <div class="control-group">
+        <div class="controls">
+          <button type="submit" class="btn btn-success">Entrar</button>
+        </div>
+    </div>
+  </form>
+{% endblock %}
