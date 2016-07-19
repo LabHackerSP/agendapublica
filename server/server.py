@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 import os
 from flask import Flask, url_for, redirect, render_template, request, abort
-from flask_admin import Admin
+from flask_admin import Admin, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
 from flask_admin import helpers as admin_helpers
 from flask_sqlalchemy import SQLAlchemy
 from flask_security import Security, SQLAlchemyUserDatastore, \
     UserMixin, RoleMixin, login_required, current_user
 from flask_security.utils import encrypt_password
-import flask.ext.restless
-from flask.ext.cors import CORS
+import flask_restless
+from flask_cors import CORS
 from datetime import datetime
 from settings import *
 
@@ -18,12 +18,15 @@ app = Flask(__name__)
 
 #Config
 CORS(app)
+"""
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///" + SETTINGS['DATABASE']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = SETTINGS['SECRET_KEY']
 if SETTINGS['DEBUG']:
     app.config['SQLALCHEMY_ECHO'] = True
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+"""
+app.config.from_pyfile('settings.py')
 
 db = SQLAlchemy(app)
 
@@ -83,6 +86,9 @@ class Responsavel(db.Model, UserMixin):
 
     def __repr__(self):
         return self.nome
+    
+    def is_authenticated(self):
+        return self.active
 
 class Evento(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -113,8 +119,18 @@ user_datastore = SQLAlchemyUserDatastore(db, Responsavel, Role)
 security = Security(app, user_datastore)
 
 # Create customized model view class
-class SecureView(ModelView):
+class AdminIndexView(AdminIndexView):
+    def is_accessible(self):
+        return current_user.is_authenticated
+        
+    def _handle_view(self, name, **kwargs):
+        if not self.is_accessible():
+            if current_user.is_authenticated:
+                abort(403)
+            else:
+                return redirect(url_for('security.login', next=request.url))
 
+class SecureView(ModelView):
     def is_accessible(self):
         #if not current_user.is_active or not current_user.is_authenticated:
         #    return False
@@ -140,7 +156,7 @@ class SecureView(ModelView):
 def index():
     return 'hello world'
 
-admin = Admin(app, name='Agenda Publica', template_mode='bootstrap3')
+admin = Admin(app, name='Agenda Publica', template_mode='bootstrap3', index_view=AdminIndexView())
 # Add administrative views here
 admin.add_view(SecureView(Evento, db.session))
 admin.add_view(SecureView(Responsavel, db.session))
@@ -149,7 +165,7 @@ admin.add_view(SecureView(Tipo, db.session))
 admin.add_view(SecureView(Tag, db.session))
 
 # Create the Flask-Restless API manager.
-manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
+manager = flask_restless.APIManager(app, flask_sqlalchemy_db=db)
 
 # Create API endpoints, which will be available at /api/<tablename> by
 # default. Allowed HTTP methods can be specified as well.
@@ -189,9 +205,10 @@ def build_sample_db():
 
 if __name__ == "__main__":   
      # Build a sample db on the fly, if one does not exist yet.
+    """
     app_dir = os.path.realpath(os.path.dirname(__file__))
     database_path = os.path.join(app_dir, SETTINGS['DATABASE'])
     if not os.path.exists(database_path):
         build_sample_db()
-
+    """
     app.run(host='0.0.0.0', debug=True)
