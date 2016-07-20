@@ -2,6 +2,7 @@
 import os
 from flask import Flask, url_for, redirect, render_template, request, abort
 from flask_admin import Admin, AdminIndexView
+from flask_admin.base import MenuLink
 from flask_admin.contrib.sqla import ModelView
 from flask_admin import helpers as admin_helpers
 from flask_sqlalchemy import SQLAlchemy
@@ -119,50 +120,47 @@ user_datastore = SQLAlchemyUserDatastore(db, Responsavel, Role)
 security = Security(app, user_datastore)
 
 # Create customized model view class
-class AdminIndexView(AdminIndexView):
+class LoginRequired():
+    #Override builtin _handle_view in order to redirect users when a view is not accessible.
+    def _handle_view(self, name, **kwargs):
+        if not self.is_accessible():
+            if current_user.is_authenticated:
+                abort(403)
+            else:
+                return redirect(url_for('security.login', next=request.url))
+                
+class IndexView(LoginRequired, AdminIndexView):
     def is_accessible(self):
         return current_user.is_authenticated
-        
-    def _handle_view(self, name, **kwargs):
-        if not self.is_accessible():
-            if current_user.is_authenticated:
-                abort(403)
-            else:
-                return redirect(url_for('security.login', next=request.url))
 
-class SecureView(ModelView):
+class SuperuserView(LoginRequired, ModelView):
     def is_accessible(self):
-        #if not current_user.is_active or not current_user.is_authenticated:
-        #    return False
+        return current_user.has_role('superuser') 
 
-        if current_user.has_role('superuser'):
-            return True
+class UserView(LoginRequired, ModelView):
+    def is_accessible(self):
+        return current_user.has_role('user')
 
-        return False
-
-    def _handle_view(self, name, **kwargs):
-        """
-        Override builtin _handle_view in order to redirect users when a view is not accessible.
-        """
-        if not self.is_accessible():
-            if current_user.is_authenticated:
-                # permission denied
-                abort(403)
-            else:
-                # login
-                return redirect(url_for('security.login', next=request.url))
+#view custom de evento
+class EventoView(UserView):
+    column_labels = dict(tags="Categorias")
+    
+    def on_form_prefill(self, form, id):
+        print(form)
 
 @app.route("/")
 def index():
-    return 'hello world'
+    return redirect(url_for('admin.index'))
 
-admin = Admin(app, name='Agenda Publica', template_mode='bootstrap3', index_view=AdminIndexView())
+admin = Admin(app, name='Agenda Publica', template_mode='bootstrap3', index_view=IndexView())
 # Add administrative views here
-admin.add_view(SecureView(Evento, db.session))
-admin.add_view(SecureView(Responsavel, db.session))
-admin.add_view(SecureView(Orgao, db.session))
-admin.add_view(SecureView(Tipo, db.session))
-admin.add_view(SecureView(Tag, db.session))
+admin.add_view(EventoView(Evento, db.session))
+#admin.add_view(SuperuserView(Evento, db.session))
+admin.add_view(SuperuserView(Responsavel, db.session))
+admin.add_view(SuperuserView(Orgao, db.session))
+admin.add_view(SuperuserView(Tipo, db.session))
+admin.add_view(SuperuserView(Tag, db.session))
+admin.add_link(MenuLink(name='Logout', endpoint='security.logout'))
 
 # Create the Flask-Restless API manager.
 manager = flask_restless.APIManager(app, flask_sqlalchemy_db=db)
