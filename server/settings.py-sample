@@ -1,5 +1,9 @@
-SETTINGS = {}
-SETTINGS['DEBUG'] = True
+DEBUG = True
 
-SETTINGS['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
-SETTINGS['SECRET_KEY'] = '123456790'
+SQLALCHEMY_DATABASE_URI = 'sqlite:///./agenda.db'
+# -- Change the following line to your database secret key
+SECRET_KEY = 'secretkey'
+
+SECURITY_PASSWORD_HASH = 'sha512_crypt'
+# -- Change the following line to your password salt
+SECURITY_PASSWORD_SALT = 'passwordsalt'
