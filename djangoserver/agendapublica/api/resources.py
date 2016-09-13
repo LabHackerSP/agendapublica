@@ -5,6 +5,7 @@ from agendapublica.models import Evento
 
 class EventoResource(ModelResource):
 	limit = 0
+	max_limit = 0
     orgao = fields.CharField(attribute="orgao")
     tipo = fields.CharField(attribute="tipo")
 
