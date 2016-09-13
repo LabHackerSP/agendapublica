@@ -31,7 +31,6 @@ class Responsavel(models.Model):
 
 class Evento(models.Model):
     titulo = models.TextField()
-    local = models.TextField()
     orgao = models.ForeignKey(Orgao, on_delete=models.CASCADE)
     responsavel = models.ForeignKey(Responsavel, on_delete=models.CASCADE)
     tipo = models.ForeignKey(Tipo)
@@ -39,8 +38,8 @@ class Evento(models.Model):
     data_inicio = models.DateTimeField()
     data_fim = models.DateTimeField()
     descricao = models.TextField()
-    link = models.URLField()
-    cartaz = models.ImageField()
+    link = models.URLField(blank=True)
+    cartaz = models.ImageField(blank=True)
     tags = models.ManyToManyField('Tag')
 
     def __unicode__(self):
