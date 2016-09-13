@@ -311,6 +311,9 @@ function loadEvent(data, id) {
       //console.log(infoHandler(obj));
       $("#info").html(infoHandler(obj));
       $("#info-panel").trigger("create");
+      cordova.plugins.notification.local.isPresent(id, function(present) {
+        if(present) $("#info-checkbox").prop("checked", true);
+      });
       $("#info-panel").panel("open");
       return;
     }
@@ -318,6 +321,54 @@ function loadEvent(data, id) {
   // if we got here we didn't find the event
   alert("Não foi possível encontrar o evento selecionado");
 }
+
+// procura evento com id x
+function findEvent(id) {
+  for(var data in eventos) {
+    for(var obj in eventos[data]) {
+      if(eventos[data][obj].id == id) {
+        return eventos[data][obj];
+      }
+    }
+  }
+}
+
+// chamado quando checkbox de lembrete em evento é mudado
+function atualizaLembrete(checkbox) {
+  var id = checkbox.value;
+  if(checkbox.checked) {
+    notification.add(id);
+  } else {
+    notification.remove(id);
+  }
+}
+
+// funções de notificação
+var notification = {
+  add: function(id) {
+    cordova.plugins.notification.local.isPresent(id, function(present) {
+      if(!present) {
+        var obj = findEvent(id);
+        var data = moment(obj.data_inicio);
+        
+        cordova.plugins.notification.local.schedule({
+            id: id,
+            text: data.format("dddd, h:mmA - ") + obj.titulo,
+            // notifica um dia antes, ao meio dia
+            firstAt: data.subtract(1, 'days').hour(12).minute(0).second(0).toDate()
+        });
+      }
+    });
+  },
+  
+  remove: function(id) {
+    cordova.plugins.notification.local.isPresent(id, function(present) {
+      if(present) {
+        cordova.plugins.notification.local.clear(id)
+      }
+    });
+  }
+};
 
 // chamado quando usuário muda mês no calendário
 function updateMonth(year, month, inst) {

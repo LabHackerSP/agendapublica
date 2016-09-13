@@ -34,4 +34,5 @@
     <preference name="backgroundColor" value="0xffffd700" />
     <preference name="SplashScreenBackgroundColor" value="0xffffd700" />
     <preference name="SplashMaintainAspectRatio" value="true" />
+    <preference name="FadeSplashScreenDuration" value="250"/>
 </widget>
