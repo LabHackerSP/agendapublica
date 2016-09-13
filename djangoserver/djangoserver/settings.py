@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'restless',
+    'tastypie',
     'agendapublica',
     'django.contrib.admin',
     'django.contrib.auth',

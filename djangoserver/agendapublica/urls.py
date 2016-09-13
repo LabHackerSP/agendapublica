@@ -1,7 +1,10 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
+from tastypie.api import Api
 
-from . import views
+from agendapublica.api.resources import EventoResource
+
+evento = EventoResource()
 
 urlpatterns = [
-    url(r'^api/$', views.EventoApi.as_view())
+    url(r'^api/', include(evento.urls))
 ]
