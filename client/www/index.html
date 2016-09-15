@@ -95,7 +95,14 @@
             <p>Horário: {{formataHora data_inicio}} até {{formataHora data_fim}}</p>
           {{/if_mesmaHora}}
           <p><a href="#" onclick="window.open('{{link}}', '_system');">Saiba mais</a></p>
-          <p><input id="info-checkbox" type="checkbox" name="lembrete" value="{{id}}" onclick="atualizaLembrete(this)"> Notificar um dia antes</p>
+          <div data-role="fieldcontain">
+            <fieldset data-role="controlgroup">
+              <label>
+                <input name="lembrete" id="info-checkbox" data-mini="true" type="checkbox" value="{{id}}" onclick="atualizaLembrete(this)" />
+                Notificar um dia antes
+              </label>
+            </fieldset>
+          </div>
         </script>
       </div>
     </div>

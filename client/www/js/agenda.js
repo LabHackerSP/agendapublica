@@ -311,9 +311,11 @@ function loadEvent(data, id) {
       //console.log(infoHandler(obj));
       $("#info").html(infoHandler(obj));
       $("#info-panel").trigger("create");
-      cordova.plugins.notification.local.isPresent(id, function(present) {
-        if(present) $("#info-checkbox").prop("checked", true);
-      });
+      if(window.cordova) {
+        cordova.plugins.notification.local.isPresent(id, function(present) {
+          if(present) $("#info-checkbox").prop("checked", true);
+        });
+      }
       $("#info-panel").panel("open");
       return;
     }
@@ -346,27 +348,31 @@ function atualizaLembrete(checkbox) {
 // funções de notificação
 var notification = {
   add: function(id) {
-    cordova.plugins.notification.local.isPresent(id, function(present) {
-      if(!present) {
-        var obj = findEvent(id);
-        var data = moment(obj.data_inicio);
-        
-        cordova.plugins.notification.local.schedule({
-            id: id,
-            text: data.format("dddd, h:mmA - ") + obj.titulo,
-            // notifica um dia antes, ao meio dia
-            firstAt: data.subtract(1, 'days').hour(12).minute(0).second(0).toDate()
-        });
-      }
-    });
+    if(window.cordova) {
+      cordova.plugins.notification.local.isPresent(id, function(present) {
+        if(!present) {
+          var obj = findEvent(id);
+          var data = moment(obj.data_inicio);
+          
+          cordova.plugins.notification.local.schedule({
+              id: id,
+              text: data.format("dddd, h:mmA - ") + obj.titulo,
+              // notifica um dia antes, ao meio dia
+              firstAt: data.subtract(1, 'days').hour(12).minute(0).second(0).toDate()
+          });
+        }
+      });
+    }
   },
   
   remove: function(id) {
-    cordova.plugins.notification.local.isPresent(id, function(present) {
-      if(present) {
-        cordova.plugins.notification.local.clear(id)
-      }
-    });
+    if(window.cordova) {
+      cordova.plugins.notification.local.isPresent(id, function(present) {
+        if(present) {
+          cordova.plugins.notification.local.clear(id)
+        }
+      });
+    }
   }
 };
 
