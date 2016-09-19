@@ -116,8 +116,23 @@
       <h1>Lembretes</h1>
     </div>
     <!-- conteúdo -->
-    <div id="lembretes">
-
+    <div data-role="content" id="lembretes">
+      <script id="lembretes-template" type="text/x-handlebars-template">
+        <ul data-role="listview">
+          <li><h1>Eventos passados</h1></li>
+          {{#each triggered}}
+            <li>
+              {{titulo}}
+            </li>
+          {{/each}}
+          <li><h1>Eventos futuros</h1></li>
+          {{#each scheduled}}
+            <li>
+              {{this.titulo}}
+            </li>
+          {{/each}}          
+        </ul>
+      </script>
     </div>
   </div>
   

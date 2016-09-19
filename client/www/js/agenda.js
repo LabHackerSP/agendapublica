@@ -18,6 +18,7 @@ moment.locale('pt-BR');
 // inicialização handlebars
 var eventoHandler;
 var infoHandler;
+var lembreteHandler;
 Handlebars.registerHelper('formataDia', function(data) {
   return moment(data).format("ddd, D");
 });
@@ -62,7 +63,7 @@ $(function() {
 });
 
 // inicialização da página
-$(document).on("pageinit","#index",function(){ // When initializing index
+$(document).on("pageinit","#index",function() { // When initializing index
   // um swipe right no index abre menu
   $(document).on("swiperight", "#index", openMenu);
   
@@ -78,6 +79,7 @@ $(document).on("pageinit","#index",function(){ // When initializing index
   
   eventoHandler = Handlebars.compile($("#eventos-template").html());
   infoHandler = Handlebars.compile($("#info-template").html());
+  lembreteHandler = Handlebars.compile($("#lembretes-template").html());
   
   //page transition fade é feia
   $.mobile.defaultPageTransition = "slide";
@@ -88,21 +90,48 @@ $(document).on("pageinit","#index",function(){ // When initializing index
   carregaAno(null, mostraEventos);
 });
 
-// back sai do sobre quando vai pro sobre
-$(document).on("pagebeforeshow","#sobrepage",function(){
-  document.removeEventListener("backbutton", closeMenus);
-  document.addEventListener("backbutton", gotoIndex, false);
-});
+var buttonEvents = {
+  backToIndex: function() {
+    document.removeEventListener("backbutton", closeMenus);
+    document.addEventListener("backbutton", gotoIndex, false);
+  },
+  
+  backClosesMenus: function() {
+    document.removeEventListener("backbutton", gotoIndex);
+    document.addEventListener("backbutton", closeMenus, false);
+  }
+}
 
-// back fecha menus quando volta pro index
-$(document).on("pagebeforeshow","#index",function(){
-  document.removeEventListener("backbutton", gotoIndex);
-  document.addEventListener("backbutton", closeMenus, false);
-});
-
-function onLoad() {
+function onLoad() { // hooks vão aqui
   // hook do cordova quando dispostivo inicializou
   document.addEventListener("deviceready", onDeviceReady, false);
+  
+  // back sai do sobre quando vai pro sobre
+  $(document).on("pagebeforeshow","#sobrepage",function() {
+    buttonEvents.backToIndex();
+  });
+
+  // back fecha menus quando volta pro index
+  $(document).on("pagebeforeshow","#index",function() {
+    buttonEvents.backClosesMenus();
+  });
+
+  // carrega lembretes quando abrir página de lembretes
+  $(document).on("pagebeforeshow","#lembretepage",function() {
+    buttonEvents.backToIndex();
+    
+    var lembretes = {
+      triggered: notification.eventsTriggered(),
+      scheduled: notification.eventsScheduled()
+    };
+    
+    //console.log(lembretes);
+    
+    //$("#lembretes").html(lembreteHandler(lembretes));
+    //debug:
+    $("#lembretes").html(JSON.stringify(lembretes,null,2));
+    $("#lembretes").trigger("create");
+  });
 }
 
 function onDeviceReady() {
@@ -291,9 +320,7 @@ function mostraEventos(scroll) {
   
   //scroll para dia selecionado
   if(scroll == true) {
-    console.log(stringDia);
     var elementoDia = $('#'+stringDia);
-    console.log(elementoDia);
     if(elementoDia != null) {
       $('html, body').animate({
           scrollTop: elementoDia.offset().top - $('.header').height()
@@ -373,6 +400,30 @@ var notification = {
         }
       });
     }
+  },
+  
+  eventsTriggered: function(id) {
+    var result = [];
+    if(window.cordova) {
+      cordova.plugins.notification.local.getTriggeredIds(function(ids) {
+        for(var id in ids) {
+          result.push(findEvent(ids[id]));
+        }
+      });
+    }
+    return result;
+  },
+  
+  eventsScheduled: function(id) {
+    var result = [];
+    if(window.cordova) {
+      cordova.plugins.notification.local.getScheduledIds(function(ids) {
+        for(var id in ids) {
+          result.push(findEvent(ids[id]));
+        }
+      });
+    }
+    return result;
   }
 };
 
