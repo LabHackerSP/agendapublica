@@ -120,22 +120,17 @@ function onLoad() { // hooks vão aqui
   $(document).on("pagebeforeshow","#lembretepage",function() {
     buttonEvents.backToIndex();
     
-    var lembretes = {
-      triggered: notification.eventsTriggered(),
-      scheduled: notification.eventsScheduled()
-    };
-    
-    //console.log(lembretes);
-    
-    //$("#lembretes").html(lembreteHandler(lembretes));
-    //debug:
-    $("#lembretes").html(JSON.stringify(lembretes,null,2));
-    $("#lembretes").trigger("create");
+    notification.getNotifications(buildNotificationPage);
   });
 }
 
+function buildNotificationPage(lembretes) {
+  $("#lembretes").html(lembreteHandler(lembretes));
+  $("#lembretes").trigger("create");
+}
+
 function onDeviceReady() {
-  // inicializa botões hardware do dispositivo
+  // inicializa botõ  es hardware do dispositivo
   document.addEventListener("backbutton", closeMenus, false);
   navigator.app.overrideButton("menubutton", true);
   document.addEventListener("menubutton", openMenu, false);
@@ -337,12 +332,11 @@ function loadEvent(data, id) {
     if(obj.id == id) {
       //console.log(infoHandler(obj));
       $("#info").html(infoHandler(obj));
+      // marca checkbox se notificação já está agendada
+      cordova.plugins.notification.local.isPresent(id, function(present) {
+        if(present) $("#info-checkbox").prop("checked", true).checkboxradio('refresh');
+      });
       $("#info-panel").trigger("create");
-      if(window.cordova) {
-        cordova.plugins.notification.local.isPresent(id, function(present) {
-          if(present) $("#info-checkbox").prop("checked", true);
-        });
-      }
       $("#info-panel").panel("open");
       return;
     }
@@ -375,55 +369,47 @@ function atualizaLembrete(checkbox) {
 // funções de notificação
 var notification = {
   add: function(id) {
-    if(window.cordova) {
-      cordova.plugins.notification.local.isPresent(id, function(present) {
-        if(!present) {
-          var obj = findEvent(id);
-          var data = moment(obj.data_inicio);
-          
-          cordova.plugins.notification.local.schedule({
-              id: id,
-              text: data.format("dddd, h:mmA - ") + obj.titulo,
-              // notifica um dia antes, ao meio dia
-              firstAt: data.subtract(1, 'days').hour(12).minute(0).second(0).toDate()
-          });
-        }
-      });
-    }
+    cordova.plugins.notification.local.isPresent(id, function(present) {
+      if(!present) {
+        var obj = findEvent(id);
+        var data = moment(obj.data_inicio);
+        
+        cordova.plugins.notification.local.schedule({
+            id: id,
+            text: data.format("dddd, h:mmA - ") + obj.titulo,
+            // notifica um dia antes, ao meio dia
+            firstAt: data.subtract(1, 'days').hour(12).minute(0).second(0).toDate()
+        });
+      }
+    });
   },
   
   remove: function(id) {
-    if(window.cordova) {
-      cordova.plugins.notification.local.isPresent(id, function(present) {
-        if(present) {
-          cordova.plugins.notification.local.clear(id)
-        }
-      });
-    }
+    cordova.plugins.notification.local.isPresent(id, function(present) {
+      if(present) {
+        cordova.plugins.notification.local.clear(id)
+      }
+    });
   },
   
-  eventsTriggered: function(id) {
-    var result = [];
-    if(window.cordova) {
-      cordova.plugins.notification.local.getTriggeredIds(function(ids) {
-        for(var id in ids) {
-          result.push(findEvent(ids[id]));
-        }
-      });
+  getNotifications: function(callback) {
+    var lembretes = {
+      triggered: [],
+      scheduled: []
     }
-    return result;
-  },
-  
-  eventsScheduled: function(id) {
-    var result = [];
-    if(window.cordova) {
+    cordova.plugins.notification.local.getTriggeredIds(function(ids) {
+      for(var id in ids) {
+        lembretes.triggered.push(findEvent(ids[id]));
+      }
+      
       cordova.plugins.notification.local.getScheduledIds(function(ids) {
         for(var id in ids) {
-          result.push(findEvent(ids[id]));
+          lembretes.scheduled.push(findEvent(ids[id]));
         }
+        
+        callback(lembretes);
       });
-    }
-    return result;
+    });
   }
 };
 
