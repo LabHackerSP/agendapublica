@@ -121,15 +121,21 @@
         <ul data-role="listview">
           <li><h1>Eventos passados</h1></li>
           {{#each triggered}}
-            <li>
-              {{titulo}}
-            </li>
+            <li><a href='#' onClick='gotoEvent({{formataDataJSON data_inicio}},{{id}});'>
+            <h2 class='event-title event-overflow'>{{titulo}}</h2>
+            <p class='event-desc event-overflow'><strong>{{formataDescricao descricao}}</strong></p>
+            <p>{{local}}</p>
+            <p class='ui-li-aside'><strong>{{horario}}</strong></p>
+            </a></li>
           {{/each}}
           <li><h1>Eventos futuros</h1></li>
           {{#each scheduled}}
-            <li>
-              {{this.titulo}}
-            </li>
+            <li><a href='#' onClick='gotoEvent({{formataDataJSON data_inicio}},{{id}});'>
+            <h2 class='event-title event-overflow'>{{titulo}}</h2>
+            <p class='event-desc event-overflow'><strong>{{formataDescricao descricao}}</strong></p>
+            <p>{{local}}</p>
+            <p class='ui-li-aside'><strong>{{horario}}</strong></p>
+            </a></li>
           {{/each}}          
         </ul>
       </script>

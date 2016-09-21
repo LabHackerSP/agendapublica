@@ -43,6 +43,10 @@ Handlebars.registerHelper('formataHora', function(data) {
   return data.format('LT');
 });
 
+Handlebars.registerHelper('formataDataJSON', function(data) {
+  return data.format('YYYYMMDD');
+});
+
 Handlebars.registerHelper('if_mesmoDia', function(a, b, block) {
   var data1 = moment(a).startOf('day');
   var data2 = moment(b).startOf('day');
@@ -130,7 +134,7 @@ function buildNotificationPage(lembretes) {
 }
 
 function onDeviceReady() {
-  // inicializa botõ  es hardware do dispositivo
+  // inicializa botões hardware do dispositivo
   document.addEventListener("backbutton", closeMenus, false);
   navigator.app.overrideButton("menubutton", true);
   document.addEventListener("menubutton", openMenu, false);
@@ -322,6 +326,17 @@ function mostraEventos(scroll) {
       }, 600);
     }
   }
+}
+
+// chamado para carregar detalhes de um evento de outra página
+function gotoEvent(data, id) {
+  $(document).on("pageshow","#index",function() {
+    console.log("yeap");
+    loadEvent(data,id);
+    $(document).off("pageshow","#index");
+  });
+  
+  gotoIndex();
 }
 
 // chamado para abrir painel com informações do evento selecionado
