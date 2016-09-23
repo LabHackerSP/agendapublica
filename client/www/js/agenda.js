@@ -1,4 +1,4 @@
-SERVER = "http://labhacker.org.br:5000/api/evento";
+SERVER = "http://agendapublica.labhacker.org.br/api/v1/evento";
 var dataSelecionada = new Date(); // data usada para mostrar eventos
 
 //var matrizEventos = new Object(); // deprecated
@@ -181,20 +181,9 @@ function carregaAno(date, callback) {
   var startDate = date + '-01-01';
   var endDate = date + '-12-31';
   var query = { 
-    "filters": [{
-      "name":"data_inicio",
-      "op":"gte",
-      "val": startDate
-    },{
-      "name":"data_inicio",
-      "op":"lte",
-      "val": endDate
-    }],
-    "order_by": [{
-      "field":"data_inicio",
-      "direction":"asc"
-    }]
-  }
+    "data_inicio__gte": startDate,
+    "data_fim__lte": endDate
+  };
   
   var url = SERVER + "?q=" + JSON.stringify(query);
   //console.log(url);
