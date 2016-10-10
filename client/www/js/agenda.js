@@ -1,4 +1,4 @@
-SERVER = "http://agendapublica.labhacker.org.br/api/v1/evento";
+SERVER = "http://agendapublica.labhacker.org.br/api/v1/evento/";
 var dataSelecionada = new Date(); // data usada para mostrar eventos
 
 //var matrizEventos = new Object(); // deprecated
