@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="themes/agenda.min.css" />
   <link rel="stylesheet" href="themes/jquery.mobile.icons.min.css" />
   <link rel="stylesheet" href="themes/jquery.mobile.datepicker.theme.css" />
+  <link rel="stylesheet" href="themes/extra.css" />
   <link rel="stylesheet" href="css/jquery.mobile.structure-1.4.5.min.css" />
   <link rel="stylesheet" href="css/jquery.mobile.datepicker.css" />
   <link rel="stylesheet" href="css/ubuntu.css" />
@@ -78,31 +79,37 @@
     </div>
     <!-- painel de evento -->
     <div data-role="panel" data-position="right" data-position-fixed="true" data-display="overlay" id="info-panel">
-      <div id="info" class="ui-panel-inner">
+      <div id="info" class="ui-panel-inner evento-div">
         <script id="info-template" type="text/x-handlebars-template">
-          <h2>{{titulo}}</h2>
-          <h4>{{formataDescricao descricao}}</h4>
-          <p>{{local}}</p>
-          <p>{{endereco}}</p>
-          {{#if_mesmoDia data_inicio data_fim}}
-            <p>Quando: {{formataData data_inicio}}</p>
-          {{else}}
-            <p>Quando: {{formataData data_inicio}} até {{formataData data_fim}}</p>
-          {{/if_mesmoDia}}
-          {{#if_mesmaHora data_inicio data_fim}}
-            <p>Horário: {{formataHora data_inicio}}</p>
-          {{else}}
-            <p>Horário: {{formataHora data_inicio}} até {{formataHora data_fim}}</p>
-          {{/if_mesmaHora}}
-          <p><a href="#" onclick="window.open('{{link}}', '_system');">Saiba mais</a></p>
-          <div data-role="fieldcontain">
-            <fieldset data-role="controlgroup">
+          <h2 class="evento-titulo">{{titulo}}</h2>
+          <h4 class="evento-descricao">{{formataDescricao descricao}}</h4>
+          <hr class="evento-line" />
+          <p class="evento-icone-local evento-dado">{{local}} / {{endereco}}</p>
+          <p class="evento-icone-datal evento-dado">
+            {{#if_mesmoDia data_inicio data_fim}}
+              {{formataData data_inicio}}
+            {{else}}
+              {{formataData data_inicio}} até {{formataData data_fim}}
+            {{/if_mesmoDia}}
+          </p>
+          <p class="evento-icone-hora evento-dado">
+            {{#if_mesmaHora data_inicio data_fim}}
+              {{formataHora data_inicio}}
+            {{else}}
+              {{formataHora data_inicio}} até {{formataHora data_fim}}
+            {{/if_mesmaHora}}
+          </p>
+          <div align="center" data-role="controlgroup" data-mini="true">
+            <a data-role="button" href="#" onclick="window.open('{{link}}', '_system');" data-theme="c">Saiba mais</a>
+          </div>
+          <hr class="evento-line" />
+          <div align="center" data-role="controlgroup">
               <label>
                 <input name="lembrete" id="info-checkbox" data-mini="true" type="checkbox" value="{{id}}" onclick="atualizaLembrete(this)" />
                 Notificar um dia antes
               </label>
-            </fieldset>
           </div>
+          <hr class="evento-line" />
         </script>
       </div>
     </div>

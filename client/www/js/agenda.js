@@ -337,9 +337,11 @@ function loadEvent(data, id) {
       //console.log(infoHandler(obj));
       $("#info").html(infoHandler(obj));
       // marca checkbox se notificação já está agendada
-      cordova.plugins.notification.local.isPresent(id, function(present) {
-        if(present) $("#info-checkbox").prop("checked", true).checkboxradio('refresh');
-      });
+      if(typeof(cordova) != "undefined") {
+        cordova.plugins.notification.local.isPresent(id, function(present) {
+          if(present) $("#info-checkbox").prop("checked", true).checkboxradio('refresh');
+        });
+      }
       $("#info-panel").trigger("create");
       $("#info-panel").panel("open");
       return;
