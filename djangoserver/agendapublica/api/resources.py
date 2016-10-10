@@ -20,10 +20,11 @@ class EventoResource(ModelResource):
         resource_name = 'evento'
         queryset = Evento.objects.all()
         allowed_methods = ['get']
+        ordering = ['-descricao']
 
         filtering = {
-            'data_inicio' : ['gte'],
-            'data_fim' : ['lte']
+            'data_inicio' : ['gte','lte'],
+            'data_fim' : ['lte','gte']
         }
 
     def determine_format(self, request):
