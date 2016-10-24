@@ -1,9 +1,10 @@
 from tastypie import fields
-from tastypie.resources import ModelResource, Resource
+from tastypie.resources import ModelResource, Resource, ALL_WITH_RELATIONS
 from agendapublica.models import Evento, Tag
 
 class TagResource(ModelResource):
     class Meta:
+        limit = 0
         resource_name = 'tag'
         queryset = Tag.objects.all()
     def determine_format(self, request):
@@ -24,7 +25,8 @@ class EventoResource(ModelResource):
 
         filtering = {
             'data_inicio' : ['gte','lte'],
-            'data_fim' : ['lte','gte']
+            'data_fim' : ['lte','gte'],
+            'tags' : ALL_WITH_RELATIONS
         }
 
     def determine_format(self, request):
