@@ -3,6 +3,8 @@ from tastypie.resources import ModelResource, Resource, ALL_WITH_RELATIONS
 from agendapublica.models import Evento, Tag
 
 class TagResource(ModelResource):
+    eventos = fields.ToManyField('agendapublica.api.resources.EventoResource', 'evento_set')
+
     class Meta:
         limit = 0
         resource_name = 'tag'
