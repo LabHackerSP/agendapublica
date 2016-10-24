@@ -299,7 +299,7 @@ function mostraEventos(scroll) {
     eventTitle.css('margin-right', '2.5em');
   }
   // limita descrição pra 4 linhas
-  if(eventDesc.length > 0) eventDesc.css('max-height', parseFloat($(".event-desc").css('line-height').replace('px',''))*4 + 'px');
+  if(eventDesc.length > 0) eventDesc.css('max-height', parseFloat($(".event-desc").css('line-height').replace('px',''))*2 + 'px');
   if(eventOverflow.length > 0) {
     // trunca
     eventOverflow.css('white-space', 'normal');
