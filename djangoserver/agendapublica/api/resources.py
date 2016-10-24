@@ -3,7 +3,11 @@ from tastypie.resources import ModelResource, Resource, ALL_WITH_RELATIONS
 from agendapublica.models import Evento, Tag
 
 class TagResource(ModelResource):
-    eventos = fields.ToManyField('agendapublica.api.resources.EventoResource', 'evento_set')
+    #retorna número de eventos que contém a tag quando api tag chamada com ?eventos=1
+    def dehydrate(self, bundle):
+        if bundle.request.GET.get('eventos'):
+            bundle.data['eventos'] = bundle.obj.evento_set.count()
+        return bundle
 
     class Meta:
         limit = 0
