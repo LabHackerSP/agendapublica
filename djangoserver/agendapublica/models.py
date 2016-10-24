@@ -24,8 +24,6 @@ class Tipo(models.Model):
 
 class Responsavel(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    # onde isso é usado??
-    department = models.CharField(max_length=100)
     orgao = models.ForeignKey(Orgao)
 
     def __str__(self):
