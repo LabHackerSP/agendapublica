@@ -7,12 +7,13 @@ from django.forms import ModelForm, Textarea, TextInput, RadioSelect,CheckboxSel
 class EventoForm(ModelForm):
     class Meta:
         model = Evento
-        fields = ('titulo', 'orgao', 'responsavel', 'tipo','local',
+        fields = ('titulo', 'orgao', 'responsavel', 'tipo','local','endereco',
          'data_inicio', 'data_fim','descricao','link','cartaz','tags')
         widgets = {
             'titulo': TextInput(),
             'tipo' : RadioSelect(),
             'local' : TextInput(),
+            'endereco' : TextInput(),
             'tags' : CheckboxSelectMultiple()
         }
 
