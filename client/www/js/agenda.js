@@ -1,4 +1,4 @@
-SERVER = "http://agendapublica.labhacker.org.br/api/v1/evento/";
+SERVER = "http://agendapublica.labhacker.org.br/api/v1/";
 var dataSelecionada = new Date(); // data usada para mostrar eventos
 
 //var matrizEventos = new Object(); // deprecated
@@ -19,6 +19,8 @@ moment.locale('pt-BR');
 var eventoHandler;
 var infoHandler;
 var lembreteHandler;
+var tagsHandler;
+
 Handlebars.registerHelper('formataDia', function(data) {
   return moment(data).format("ddd, D");
 });
@@ -84,6 +86,7 @@ $(document).on("pageinit","#index",function() { // When initializing index
   eventoHandler = Handlebars.compile($("#eventos-template").html());
   infoHandler = Handlebars.compile($("#info-template").html());
   lembreteHandler = Handlebars.compile($("#lembretes-template").html());
+  tagsHandler = Handlebars.compile($("#tags-template").html());
   
   //page transition fade é feia
   $.mobile.defaultPageTransition = "slide";
@@ -125,6 +128,13 @@ function onLoad() { // hooks vão aqui
     buttonEvents.backToIndex();
     
     notification.getNotifications(buildNotificationPage);
+  });
+  
+  // carrega tags quando abrir página de tags
+  $(document).on("pagebeforeshow","#tagspage",function() {
+    buttonEvents.backToIndex();
+    
+    tags.load();
   });
 }
 
@@ -185,7 +195,7 @@ function carregaAno(date, callback) {
     "data_fim__lte": endDate
   };
   
-  var url = SERVER + "?q=" + JSON.stringify(query);
+  var url = SERVER + "evento/?q=" + JSON.stringify(query);
   //console.log(url);
 
   $.ajax({
@@ -418,6 +428,56 @@ var notification = {
     });
   }
 };
+
+// handlers de tags
+var tags = {
+  objects : [],
+  
+  // busca na api a lista de tags
+  load: function() {
+    if(this.objects.length == 0) {
+      var url = SERVER + "tag/?eventos=1";
+
+      $.ajax({
+        url: url,
+        dataType: "json",
+        async: true,
+        beforeSend: function() {
+          setTimeout(function() {
+            $.mobile.loading('show', {theme:"a", text:"Aguarde...", textonly:false, textVisible: true}); // This will show ajax spinner
+          }, 1);
+        },
+        complete: function() {
+          // This callback function will trigger on data sent/received complete
+          setTimeout(function() {
+            $.mobile.loading('hide'); // This will hide ajax spinner
+          }, 1);
+        },
+        success: function (result) {
+          tags.objects = result.objects;
+          tags.show();
+        },
+        error: function (request,error) {
+          alert('Não foi possível acessar o servidor!');
+        }
+      });
+    } else {
+      tags.show();
+    }
+  },
+  
+  // carrega a lista de tags no template da página
+  show: function() {
+    $("#tags").html(tagsHandler(this.objects));
+    $("#tags").trigger("create");
+    $.mobile.changePage("#tagspage");
+  },
+  
+  // busca na api de eventos a lista de eventos pelo id da tag e exibe em resultados
+  search: function(id) {
+    
+  }
+}
 
 // chamado quando usuário muda mês no calendário
 function updateMonth(year, month, inst) {

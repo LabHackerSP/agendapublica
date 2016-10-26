@@ -35,6 +35,7 @@
       <ul data-role="listview" class="ui-listview-outer">
         <li><a href="#" onClick="eventoRefresh();">Recarregar eventos</a></li>
         <li><a href="#lembretepage">Meus Lembretes</a></li>
+        <li><a href="#tagspage">Busca por Tags</a></li>
         <li><a href="#sobrepage">Sobre</a></li>
       </ul>
     </div>
@@ -72,44 +73,52 @@
               </a></li>
             {{/each}}
           {{else}}
-            <li><h3>Não há eventos para o mês escolhido!</h3></li>
+            <li><h3>Não há eventos para a busca escolhida!</h3></li>
           {{/each}}
         </ul>
       </script>
     </div>
     <!-- painel de evento -->
-    <div data-role="panel" data-position="right" data-position-fixed="true" data-display="overlay" id="info-panel">
-      <div id="info" class="ui-panel-inner evento-div">
+    <div data-role="panel" data-position="right" data-position-fixed="true" data-display="overlay" id="info-panel" class="event-panel">
+      <div id="info" class="panel-outer">
         <script id="info-template" type="text/x-handlebars-template">
-          <h2 class="evento-titulo">{{titulo}}</h2>
-          <h4 class="evento-descricao">{{formataDescricao descricao}}</h4>
-          <hr class="evento-line" />
-          <p class="evento-icone-local evento-dado">{{local}} / {{endereco}}</p>
-          <p class="evento-icone-datal evento-dado">
-            {{#if_mesmoDia data_inicio data_fim}}
-              {{formataData data_inicio}}
-            {{else}}
-              {{formataData data_inicio}} até {{formataData data_fim}}
-            {{/if_mesmoDia}}
-          </p>
-          <p class="evento-icone-hora evento-dado">
-            {{#if_mesmaHora data_inicio data_fim}}
-              {{formataHora data_inicio}}
-            {{else}}
-              {{formataHora data_inicio}} até {{formataHora data_fim}}
-            {{/if_mesmaHora}}
-          </p>
-          <div align="center" data-role="controlgroup" data-mini="true">
-            <a data-role="button" href="#" onclick="window.open('{{link}}', '_system');" data-theme="c">Saiba mais</a>
+          <div class="evento-titulo">
+            <h2>{{titulo}}</h2>
           </div>
-          <hr class="evento-line" />
-          <div align="center" data-role="controlgroup">
-              <label>
-                <input name="lembrete" id="info-checkbox" data-mini="true" type="checkbox" value="{{id}}" onclick="atualizaLembrete(this)" />
-                Notificar um dia antes
-              </label>
+          <div class="evento-div">
+            <h4 class="evento-descricao">{{formataDescricao descricao}}</h4>
+            <hr class="evento-line" />
+            <p class="evento-icone-local evento-dado">{{local}} / {{endereco}}</p>
+            <p class="evento-icone-datal evento-dado">
+              {{#if_mesmoDia data_inicio data_fim}}
+                {{formataData data_inicio}}
+              {{else}}
+                {{formataData data_inicio}} até {{formataData data_fim}}
+              {{/if_mesmoDia}}
+            </p>
+            <p class="evento-icone-hora evento-dado">
+              {{#if_mesmaHora data_inicio data_fim}}
+                {{formataHora data_inicio}}
+              {{else}}
+                {{formataHora data_inicio}} até {{formataHora data_fim}}
+              {{/if_mesmaHora}}
+            </p>
+            <div align="center" data-role="controlgroup" data-mini="true">
+              <a data-role="button" href="#" onclick="window.open('{{link}}', '_system');" data-theme="c">Saiba mais</a>
+            </div>
+            <hr class="evento-line" />
+            <div align="center" data-role="controlgroup">
+                <label>
+                  <input name="lembrete" id="info-checkbox" data-mini="true" type="checkbox" value="{{id}}" onclick="atualizaLembrete(this)" />
+                  Notificar um dia antes
+                </label>
+            </div>
+            <hr class="evento-line" />
+            <p>Tags:</p>
+            {{#each tags}}
+              <a href="#" class="ui-btn ui-mini ui-btn-inline" onClick="tag.search({{id}});">{{title}}</a> 
+            {{/each}}
           </div>
-          <hr class="evento-line" />
         </script>
       </div>
     </div>
@@ -146,6 +155,41 @@
           {{/each}}          
         </ul>
       </script>
+    </div>
+  </div>
+  
+  <!-- página de tags -->
+  <div data-role="page" id="tagspage" data-theme="a">
+    <!-- header -->
+    <div data-role="header" data-position="fixed" data-theme="b">
+      <a href="#index" class="ui-btn ui-icon-back ui-btn-icon-notext ui-corner-all"></a>
+      <h1>Tags</h1>
+    </div>
+    <!-- conteúdo -->
+    <div data-role="content" id="tags">
+      <script id="tags-template" type="text/x-handlebars-template">
+        <ul data-role="listview" data-filter="true">
+          {{#each this}}
+            <li><a href='#' onClick='tag.search{{id}});'>
+            <strong>{{title}}</strong>
+            <span class="ui-li-count">{{eventos}}</span></a>
+            </a></li>
+          {{/each}}
+        </ul>
+      </script>
+    </div>
+  </div>
+  
+  <!-- página de resultados -->
+  <div data-role="page" id="resultadospage" data-theme="a">
+    <!-- header -->
+    <div data-role="header" data-position="fixed" data-theme="b">
+      <a href="#index" class="ui-btn ui-icon-back ui-btn-icon-notext ui-corner-all"></a>
+      <h1>Resultados</h1>
+    </div>
+    <!-- conteúdo -->
+    <div data-role="content" id="resultados">
+      <!-- mesmo template da home -->
     </div>
   </div>
   

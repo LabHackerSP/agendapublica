@@ -1,7 +1,8 @@
 .evento-div {
-  background-color: #FFEB9D;
   color: #174C59;
-  text-shadow: 0 1px #AAA;
+  text-shadow: 0 1px #CCC;
+  margin: 0;
+  padding: 0.4em;
 }
 .evento-div hr {
   
@@ -10,10 +11,10 @@
 .evento-titulo {
   background-color: #174C59;
   color: #E5E5E5;
-  padding: 0.8em;
-  margin: -1em;
-  margin-bottom: 0.5em;
+  margin: 0;
+  padding: 0.4em;
   text-transform: uppercase;
+  text-shadow: 0 1px #777;
 }
 
 .evento-dado {
@@ -23,4 +24,12 @@
 
 .event-center {
   text-align: center;
+}
+
+.event-panel {
+  background-color: #FFEB9D;
+}
+
+.panel-outer {
+  margin: -1em;
 }
