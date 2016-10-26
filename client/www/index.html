@@ -170,7 +170,7 @@
       <script id="tags-template" type="text/x-handlebars-template">
         <ul data-role="listview" data-filter="true">
           {{#each this}}
-            <li><a href='#' onClick='tag.search{{id}});'>
+            <li><a href='#' onClick='tag.search({{id}});'>
             <strong>{{title}}</strong>
             <span class="ui-li-count">{{eventos}}</span></a>
             </a></li>

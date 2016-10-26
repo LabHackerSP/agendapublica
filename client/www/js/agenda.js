@@ -63,8 +63,10 @@ Handlebars.registerHelper('if_mesmaHora', function(a, b, block) {
    : block.inverse(this);
 });
 
-// init fastclick
 $(function() {
+  // hook do cordova quando dispostivo inicializou
+  document.addEventListener("deviceready", onDeviceReady, false);
+  // init fastclick
   FastClick.attach(document.body);
 });
 
@@ -83,6 +85,7 @@ $(document).on("pageinit","#index",function() { // When initializing index
     onSelect: selecionaData
   });
   
+  // handlebars
   eventoHandler = Handlebars.compile($("#eventos-template").html());
   infoHandler = Handlebars.compile($("#info-template").html());
   lembreteHandler = Handlebars.compile($("#lembretes-template").html());
@@ -109,10 +112,7 @@ var buttonEvents = {
   }
 }
 
-function onLoad() { // hooks vão aqui
-  // hook do cordova quando dispostivo inicializou
-  document.addEventListener("deviceready", onDeviceReady, false);
-  
+function onLoad() { // hooks vão aqui  
   // back sai do sobre quando vai pro sobre
   $(document).on("pagebeforeshow","#sobrepage",function() {
     buttonEvents.backToIndex();
@@ -127,7 +127,7 @@ function onLoad() { // hooks vão aqui
   $(document).on("pagebeforeshow","#lembretepage",function() {
     buttonEvents.backToIndex();
     
-    notification.getNotifications(buildNotificationPage);
+    notification.getNotifications(notification.show);
   });
   
   // carrega tags quando abrir página de tags
@@ -136,11 +136,6 @@ function onLoad() { // hooks vão aqui
     
     tags.load();
   });
-}
-
-function buildNotificationPage(lembretes) {
-  $("#lembretes").html(lembreteHandler(lembretes));
-  $("#lembretes").trigger("create");
 }
 
 function onDeviceReady() {
@@ -384,6 +379,7 @@ function atualizaLembrete(checkbox) {
 
 // funções de notificação
 var notification = {
+  // cria notificação
   add: function(id) {
     cordova.plugins.notification.local.isPresent(id, function(present) {
       if(!present) {
@@ -400,6 +396,7 @@ var notification = {
     });
   },
   
+  // remove notificação
   remove: function(id) {
     cordova.plugins.notification.local.isPresent(id, function(present) {
       if(present) {
@@ -408,6 +405,7 @@ var notification = {
     });
   },
   
+  // procura notificações guardadas no sistema
   getNotifications: function(callback) {
     var lembretes = {
       triggered: [],
@@ -426,6 +424,12 @@ var notification = {
         callback(lembretes);
       });
     });
+  },
+  
+  // monta página de notificações
+  show: function(lembretes) {
+    $("#lembretes").html(lembreteHandler(lembretes));
+    $("#lembretes").trigger("create");
   }
 };
 
@@ -470,7 +474,6 @@ var tags = {
   show: function() {
     $("#tags").html(tagsHandler(this.objects));
     $("#tags").trigger("create");
-    $.mobile.changePage("#tagspage");
   },
   
   // busca na api de eventos a lista de eventos pelo id da tag e exibe em resultados
