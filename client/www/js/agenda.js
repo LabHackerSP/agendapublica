@@ -99,6 +99,9 @@ $(document).on("pageinit","#index",function() { // When initializing index
   // carrega eventos desse mês
   carregaAno(null, mostraEventos);
 });
+function isFunction(possibleFunction) {
+  return typeof(possibleFunction) === typeof(Function);
+}
 
 var buttonEvents = {
   backToIndex: function() {
@@ -134,7 +137,7 @@ function onLoad() { // hooks vão aqui
   $(document).on("pagebeforeshow","#tagspage",function() {
     buttonEvents.backToIndex();
     
-    tags.load();
+    tags.load(tags.show);
   });
 }
 
@@ -284,15 +287,29 @@ function mostraEventos(scroll) {
   var endDate = data.endOf('month').format('YYYYMMDD');
   
   var result = {
-    mes: data.format('MMMM YYYY'),
+    header: data.format('MMMM YYYY'),
     eventos: {}
   };
   for(var v in eventos) {
     if(v >= startDate && v <= endDate) result["eventos"][v] = eventos[v];
   }
   
-  $("#eventos").html(eventoHandler(result));
-  $("#eventos").trigger("create");
+  makeEventosHTML("#eventos", result);
+  
+  //scroll para dia selecionado
+  if(scroll == true) {
+    var elementoDia = $('#'+stringDia);
+    if(elementoDia != null) {
+      $('html, body').animate({
+          scrollTop: elementoDia.offset().top - $('.header').height()
+      }, 600);
+    }
+  }
+}
+
+function makeEventosHTML(selector, result) {
+  $(selector).html(eventoHandler(result));
+  $(selector).trigger("create");
   
   var eventOverflow = $(".event-overflow");
   var eventTitle = $(".event-title");
@@ -309,16 +326,6 @@ function mostraEventos(scroll) {
     // trunca
     eventOverflow.css('white-space', 'normal');
     eventOverflow.dotdotdot();
-  }
-  
-  //scroll para dia selecionado
-  if(scroll == true) {
-    var elementoDia = $('#'+stringDia);
-    if(elementoDia != null) {
-      $('html, body').animate({
-          scrollTop: elementoDia.offset().top - $('.header').height()
-      }, 600);
-    }
   }
 }
 
@@ -438,8 +445,8 @@ var tags = {
   objects : [],
   
   // busca na api a lista de tags
-  load: function() {
-    if(this.objects.length == 0) {
+  load: function(callback) {
+    if(tags.objects.length == 0) {
       var url = SERVER + "tag/?eventos=1";
 
       $.ajax({
@@ -459,26 +466,68 @@ var tags = {
         },
         success: function (result) {
           tags.objects = result.objects;
-          tags.show();
+          console.log(tags.objects);
+          if(isFunction(callback)) callback();
         },
         error: function (request,error) {
           alert('Não foi possível acessar o servidor!');
         }
       });
     } else {
-      tags.show();
+      if(isFunction(callback)) callback();
     }
   },
   
   // carrega a lista de tags no template da página
   show: function() {
-    $("#tags").html(tagsHandler(this.objects));
+    $("#tags").html(tagsHandler(tags.objects));
     $("#tags").trigger("create");
   },
   
+  byId: function(id) {
+    for(var i in tags.objects) {
+      console.log(tags.objects[i]);
+      if(this.objects[i].id == id) return this.objects[i];
+    }
+    return null;
+  },
+  
   // busca na api de eventos a lista de eventos pelo id da tag e exibe em resultados
-  search: function(id) {
-    
+  search: function(id, name) {
+    var url = SERVER + "evento/?tags=" + id;
+
+    $.ajax({
+      url: url,
+      dataType: "json",
+      async: true,
+      beforeSend: function() {
+        setTimeout(function() {
+          $.mobile.loading('show', {theme:"a", text:"Aguarde...", textonly:false, textVisible: true}); // This will show ajax spinner
+        }, 1);
+      },
+      complete: function() {
+        // This callback function will trigger on data sent/received complete
+        setTimeout(function() {
+          $.mobile.loading('hide'); // This will hide ajax spinner
+        }, 1);
+      },
+      success: function (result) {
+        var output = {
+          header: name,
+          eventos: {}
+        };
+        for(var i in result.objects) {
+          var date = moment(result.objects[i].data_inicio).format('YYYYMMDD');
+          if(!(date in output.eventos)) output.eventos[date] = [];
+          output.eventos[date].push(result.objects[i]);
+        }
+        
+        makeEventosHTML("#resultados", output);
+      },
+      error: function (request,error) {
+        alert('Não foi possível acessar o servidor!');
+      }
+    });
   }
 }
 

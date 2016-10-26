@@ -58,7 +58,7 @@
     <div data-role="content" id="eventos">
       <script id="eventos-template" type="text/x-handlebars-template">
         <ul data-role="listview">
-          <li><h1>{{mes}}</h1></li>
+          <li><h1>{{header}}</h1></li>
           {{#each eventos}}
             <li id='{{@key}}' data-role='list-divider' class='ui-list-count' style='white-space: normal'>
             <span style='display: inline; float: left;'>{{formataDia @key}}</span>
@@ -116,7 +116,7 @@
             <hr class="evento-line" />
             <p>Tags:</p>
             {{#each tags}}
-              <a href="#" class="ui-btn ui-mini ui-btn-inline" onClick="tag.search({{id}});">{{title}}</a> 
+              <a href="#resultadospage" class="ui-btn ui-mini ui-btn-inline" onClick="tags.search({{id}}, '{{title}}');">{{title}}</a> 
             {{/each}}
           </div>
         </script>
@@ -162,7 +162,7 @@
   <div data-role="page" id="tagspage" data-theme="a">
     <!-- header -->
     <div data-role="header" data-position="fixed" data-theme="b">
-      <a href="#index" class="ui-btn ui-icon-back ui-btn-icon-notext ui-corner-all"></a>
+      <a href="#" data-rel="back" class="ui-btn ui-icon-back ui-btn-icon-notext ui-corner-all"></a>
       <h1>Tags</h1>
     </div>
     <!-- conteúdo -->
@@ -170,7 +170,7 @@
       <script id="tags-template" type="text/x-handlebars-template">
         <ul data-role="listview" data-filter="true">
           {{#each this}}
-            <li><a href='#' onClick='tag.search({{id}});'>
+            <li><a href='#resultadospage' onClick="tags.search({{id}}, '{{title}}');">
             <strong>{{title}}</strong>
             <span class="ui-li-count">{{eventos}}</span></a>
             </a></li>
