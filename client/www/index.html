@@ -65,7 +65,7 @@
             <span style='display: inline; float: right;'>{{formataRelativo @key}}</span>
             </li>
             {{#each this}}
-              <li><a href='#' onClick='loadEvent({{@../key}},{{id}});'>
+              <li><a href='#' onClick='gotoEvent({{@../key}},{{id}});'>
               <h2 class='event-title event-overflow'>{{titulo}}</h2>
               <p class='event-desc event-overflow'><strong>{{formataDescricao descricao}}</strong></p>
               <p>{{local}}</p>

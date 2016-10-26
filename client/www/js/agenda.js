@@ -331,13 +331,16 @@ function makeEventosHTML(selector, result) {
 
 // chamado para carregar detalhes de um evento de outra página
 function gotoEvent(data, id) {
-  $(document).on("pageshow","#index",function() {
-    console.log("yeap");
+  if($.mobile.activePage.attr('id') == "index") {
     loadEvent(data,id);
-    $(document).off("pageshow","#index");
-  });
-  
-  gotoIndex();
+  } else {
+    $(document).on("pageshow","#index",function() {
+      loadEvent(data,id);
+      $(document).off("pageshow","#index");
+    });
+    
+    gotoIndex();
+  }
 }
 
 // chamado para abrir painel com informações do evento selecionado
