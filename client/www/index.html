@@ -88,11 +88,8 @@
           <h2>{{titulo}}</h2>
         </div>
         <div class="evento-div">
-          {{#if cartaz}}
-            <img class="evento-cartaz" src="{{root}}{{cartaz}}" />
-          {{/if}}
           <h4 class="evento-descricao">{{formataDescricao descricao}}</h4>
-          <hr class="evento-line" />
+          <hr />
           <p class="evento-icone evento-icone-local"><span class="evento-dado">{{local}} / {{endereco}}</span></p>
           <p class="evento-icone evento-icone-data"><span class="evento-dado">
             {{#if_mesmoDia data_inicio data_fim}}
@@ -108,17 +105,27 @@
               {{formataHora data_inicio}} até {{formataHora data_fim}}
             {{/if_mesmaHora}}
           </span></p>
-          <div align="center" data-role="controlgroup" data-mini="true">
-            <a data-role="button" href="#" onclick="window.open('{{link}}', '_system');" data-theme="c">Saiba mais</a>
-          </div>
-          <hr class="evento-line" />
+          {{#if cartaz}}
+            <div class="evento-cartaz">
+              <img src="{{root}}{{cartaz}}" />
+              <a href="#" onclick="window.open('{{root}}{{cartaz}}', '_system');">
+                  Ver cartaz
+              </a>
+            </div>
+          {{/if}}
+          {{#if link}}
+            <div align="center" data-role="controlgroup" data-mini="true">
+              <a data-role="button" href="#" onclick="window.open('{{link}}', '_system');" data-theme="c">Saiba mais</a>
+            </div>
+          {{/if}}
+          <hr />
           <div align="center" data-role="controlgroup">
               <label>
                 <input name="lembrete" id="info-checkbox" data-mini="true" type="checkbox" value="{{id}}" onclick="atualizaLembrete(this)" />
                 Notificar um dia antes
               </label>
           </div>
-          <hr class="evento-line" />
+          <hr />
           <p>Tags:</p>
           {{#each tags}}
             <a href="#resultadospage" class="ui-btn ui-mini ui-btn-inline" onClick="tags.search({{id}}, '{{title}}');">{{title}}</a> 
