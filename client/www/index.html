@@ -65,7 +65,7 @@
             <span style='display: inline; float: right;'>{{formataRelativo @key}}</span>
             </li>
             {{#each this}}
-              <li><a href='#' onClick='gotoEvent({{@../key}},{{id}});'>
+              <li><a href='#' onClick='openEvent({{@../key}},{{id}});'>
               <h2 class='event-title event-overflow'>{{titulo}}</h2>
               <p class='event-desc event-overflow'><strong>{{formataDescricao descricao}}</strong></p>
               <p>{{local}}</p>
@@ -78,49 +78,50 @@
         </ul>
       </script>
     </div>
-    <!-- painel de evento -->
-    <div data-role="panel" data-position="right" data-position-fixed="true" data-display="overlay" id="info-panel" class="event-panel">
-      <div id="info" class="panel-outer">
-        <script id="info-template" type="text/x-handlebars-template">
-          <div class="evento-titulo">
-            <h2>{{titulo}}</h2>
+  </div>
+
+  <!-- painel de evento -->
+  <div data-role="panel" data-position="right" data-position-fixed="true" data-display="overlay" id="info-panel" class="event-panel">
+    <div id="info" class="panel-outer">
+      <script id="info-template" type="text/x-handlebars-template">
+        <div class="evento-titulo">
+          <h2>{{titulo}}</h2>
+        </div>
+        <div class="evento-div">
+          <h4 class="evento-descricao">{{formataDescricao descricao}}</h4>
+          <hr class="evento-line" />
+          <p class="evento-icone-local evento-dado">{{local}} / {{endereco}}</p>
+          <p class="evento-icone-datal evento-dado">
+            {{#if_mesmoDia data_inicio data_fim}}
+              {{formataData data_inicio}}
+            {{else}}
+              {{formataData data_inicio}} até {{formataData data_fim}}
+            {{/if_mesmoDia}}
+          </p>
+          <p class="evento-icone-hora evento-dado">
+            {{#if_mesmaHora data_inicio data_fim}}
+              {{formataHora data_inicio}}
+            {{else}}
+              {{formataHora data_inicio}} até {{formataHora data_fim}}
+            {{/if_mesmaHora}}
+          </p>
+          <div align="center" data-role="controlgroup" data-mini="true">
+            <a data-role="button" href="#" onclick="window.open('{{link}}', '_system');" data-theme="c">Saiba mais</a>
           </div>
-          <div class="evento-div">
-            <h4 class="evento-descricao">{{formataDescricao descricao}}</h4>
-            <hr class="evento-line" />
-            <p class="evento-icone-local evento-dado">{{local}} / {{endereco}}</p>
-            <p class="evento-icone-datal evento-dado">
-              {{#if_mesmoDia data_inicio data_fim}}
-                {{formataData data_inicio}}
-              {{else}}
-                {{formataData data_inicio}} até {{formataData data_fim}}
-              {{/if_mesmoDia}}
-            </p>
-            <p class="evento-icone-hora evento-dado">
-              {{#if_mesmaHora data_inicio data_fim}}
-                {{formataHora data_inicio}}
-              {{else}}
-                {{formataHora data_inicio}} até {{formataHora data_fim}}
-              {{/if_mesmaHora}}
-            </p>
-            <div align="center" data-role="controlgroup" data-mini="true">
-              <a data-role="button" href="#" onclick="window.open('{{link}}', '_system');" data-theme="c">Saiba mais</a>
-            </div>
-            <hr class="evento-line" />
-            <div align="center" data-role="controlgroup">
-                <label>
-                  <input name="lembrete" id="info-checkbox" data-mini="true" type="checkbox" value="{{id}}" onclick="atualizaLembrete(this)" />
-                  Notificar um dia antes
-                </label>
-            </div>
-            <hr class="evento-line" />
-            <p>Tags:</p>
-            {{#each tags}}
-              <a href="#resultadospage" class="ui-btn ui-mini ui-btn-inline" onClick="tags.search({{id}}, '{{title}}');">{{title}}</a> 
-            {{/each}}
+          <hr class="evento-line" />
+          <div align="center" data-role="controlgroup">
+              <label>
+                <input name="lembrete" id="info-checkbox" data-mini="true" type="checkbox" value="{{id}}" onclick="atualizaLembrete(this)" />
+                Notificar um dia antes
+              </label>
           </div>
-        </script>
-      </div>
+          <hr class="evento-line" />
+          <p>Tags:</p>
+          {{#each tags}}
+            <a href="#resultadospage" class="ui-btn ui-mini ui-btn-inline" onClick="tags.search({{id}}, '{{title}}');">{{title}}</a> 
+          {{/each}}
+        </div>
+      </script>
     </div>
   </div>
   
@@ -137,7 +138,7 @@
         <ul data-role="listview">
           <li><h1>Eventos passados</h1></li>
           {{#each triggered}}
-            <li><a href='#' onClick='gotoEvent({{formataDataJSON data_inicio}},{{id}});'>
+            <li><a href='#' onClick='openEvent({{formataDataJSON data_inicio}},{{id}});'>
             <h2 class='event-title event-overflow'>{{titulo}}</h2>
             <p class='event-desc event-overflow'><strong>{{formataDescricao descricao}}</strong></p>
             <p>{{local}}</p>
@@ -146,7 +147,7 @@
           {{/each}}
           <li><h1>Eventos futuros</h1></li>
           {{#each scheduled}}
-            <li><a href='#' onClick='gotoEvent({{formataDataJSON data_inicio}},{{id}});'>
+            <li><a href='#' onClick='openEvent({{formataDataJSON data_inicio}},{{id}});'>
             <h2 class='event-title event-overflow'>{{titulo}}</h2>
             <p class='event-desc event-overflow'><strong>{{formataDescricao descricao}}</strong></p>
             <p>{{local}}</p>
