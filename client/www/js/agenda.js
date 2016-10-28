@@ -1,4 +1,5 @@
-SERVER = "http://agendapublica.labhacker.org.br/api/v1/";
+ROOT = "http://agendapublica.labhacker.org.br";
+SERVER = ROOT + "/api/v1/";
 var dataSelecionada = new Date(); // data usada para mostrar eventos
 
 //var matrizEventos = new Object(); // deprecated
@@ -336,6 +337,8 @@ function openEvent(data, id) {
   for(var v in eventos[data]) {
     var obj = eventos[data][v];
     if(obj.id == id) {
+      // passa root do servidor para mídia
+      obj.root = ROOT;
       //console.log(infoHandler(obj));
       $("#info").html(infoHandler(obj));
       // marca checkbox se notificação já está agendada
@@ -544,3 +547,4 @@ function markDates(date) {
   }
   return [false, ''];
 }
+

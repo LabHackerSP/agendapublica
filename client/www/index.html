@@ -88,6 +88,9 @@
           <h2>{{titulo}}</h2>
         </div>
         <div class="evento-div">
+          {{#if cartaz}}
+            <img class="evento-cartaz" src="{{root}}{{cartaz}}" />
+          {{/if}}
           <h4 class="evento-descricao">{{formataDescricao descricao}}</h4>
           <hr class="evento-line" />
           <p class="evento-icone-local evento-dado">{{local}} / {{endereco}}</p>
@@ -129,7 +132,7 @@
   <div data-role="page" id="lembretepage" data-theme="a">
     <!-- header -->
     <div data-role="header" data-position="fixed" data-theme="b">
-      <a href="#index" class="ui-btn ui-icon-back ui-btn-icon-notext ui-corner-all"></a>
+      <a data-direction="reverse" href="#index" class="ui-btn ui-icon-back ui-btn-icon-notext ui-corner-all"></a>
       <h1>Lembretes</h1>
     </div>
     <!-- conteúdo -->
@@ -163,7 +166,7 @@
   <div data-role="page" id="tagspage" data-theme="a">
     <!-- header -->
     <div data-role="header" data-position="fixed" data-theme="b">
-      <a href="#" data-rel="back" class="ui-btn ui-icon-back ui-btn-icon-notext ui-corner-all"></a>
+      <a data-direction="reverse" href="#" data-rel="back" class="ui-btn ui-icon-back ui-btn-icon-notext ui-corner-all"></a>
       <h1>Tags</h1>
     </div>
     <!-- conteúdo -->
@@ -185,7 +188,7 @@
   <div data-role="page" id="resultadospage" data-theme="a">
     <!-- header -->
     <div data-role="header" data-position="fixed" data-theme="b">
-      <a href="#index" class="ui-btn ui-icon-back ui-btn-icon-notext ui-corner-all"></a>
+      <a data-direction="reverse" href="#index" class="ui-btn ui-icon-back ui-btn-icon-notext ui-corner-all"></a>
       <h1>Resultados</h1>
     </div>
     <!-- conteúdo -->
@@ -198,7 +201,7 @@
   <div data-role="page" id="sobrepage" data-theme="a">
     <!-- header -->
     <div data-role="header" data-position="fixed" data-theme="b">
-      <a href="#index" class="ui-btn ui-icon-back ui-btn-icon-notext ui-corner-all"></a>
+      <a data-direction="reverse" href="#index" class="ui-btn ui-icon-back ui-btn-icon-notext ui-corner-all"></a>
       <h1>Agenda Pública</h1>
     </div>
     <!-- conteúdo -->
