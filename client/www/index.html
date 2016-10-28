@@ -93,21 +93,21 @@
           {{/if}}
           <h4 class="evento-descricao">{{formataDescricao descricao}}</h4>
           <hr class="evento-line" />
-          <p class="evento-icone-local evento-dado">{{local}} / {{endereco}}</p>
-          <p class="evento-icone-datal evento-dado">
+          <p class="evento-icone evento-icone-local"><span class="evento-dado">{{local}} / {{endereco}}</span></p>
+          <p class="evento-icone evento-icone-data"><span class="evento-dado">
             {{#if_mesmoDia data_inicio data_fim}}
               {{formataData data_inicio}}
             {{else}}
               {{formataData data_inicio}} até {{formataData data_fim}}
             {{/if_mesmoDia}}
-          </p>
-          <p class="evento-icone-hora evento-dado">
+          </span></p>
+          <p class="evento-icone evento-icone-hora"><span class="evento-dado">
             {{#if_mesmaHora data_inicio data_fim}}
               {{formataHora data_inicio}}
             {{else}}
               {{formataHora data_inicio}} até {{formataHora data_fim}}
             {{/if_mesmaHora}}
-          </p>
+          </span></p>
           <div align="center" data-role="controlgroup" data-mini="true">
             <a data-role="button" href="#" onclick="window.open('{{link}}', '_system');" data-theme="c">Saiba mais</a>
           </div>

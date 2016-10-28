@@ -25,6 +25,7 @@
 .evento-dado {
   font-size: 0.8em;
   font-weight: bold;
+  vertical-align: middle;
 }
 
 .event-center {
@@ -37,4 +38,19 @@
 
 .panel-outer {
   margin: -1em;
+}
+
+.evento-icone-hora {
+  background: url('../img/wall-clock.svg') no-repeat left;
+}
+.evento-icone-data {
+  background: url('../img/calendar.svg') no-repeat left;
+}
+.evento-icone-local {
+  background: url('../img/map-marker.svg') no-repeat left;
+}
+.evento-icone {
+  padding-left: 2.5em;
+  min-height: 2.1em;
+  background-size: 2em 2em;
 }
