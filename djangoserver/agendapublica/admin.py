@@ -20,6 +20,7 @@ class EventoForm(ModelForm):
 class EventoAdmin(admin.ModelAdmin):
     form = EventoForm
     save_as = True
+    list_display = ('titulo', 'data_inicio')
 
 admin.site.register(Evento, EventoAdmin)
 admin.site.register(Orgao)
