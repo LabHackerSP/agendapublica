@@ -190,12 +190,8 @@ function carregaAno(date, callback) {
   }
   var startDate = date + '-01-01';
   var endDate = date + '-12-31';
-  var query = { 
-    "data_inicio__gte": startDate,
-    "data_fim__lte": endDate
-  };
   
-  var url = SERVER + "evento/?q=" + JSON.stringify(query);
+  var url = SERVER + "evento/?data_inicio__gte=" + startDate + "&data_fim__lte=" + endDate;
   //console.log(url);
 
   $.ajax({
@@ -214,6 +210,7 @@ function carregaAno(date, callback) {
       }, 1);
     },
     success: function (result) {
+      eventos[date] = true;
       parseJSON(result);
       callback();
     },
@@ -526,7 +523,11 @@ var tags = {
 
 // chamado quando usuário muda mês no calendário
 function updateMonth(year, month, inst) {
-  // TODO: checa se ano está carregado
+  // checa se ano está carregado
+  if(!eventos[year]) {
+    carregaAno(year, function(){});
+  }
+  
   if(month != dataSelecionada.getMonth()+1) {
     dataSelecionada = new Date(year, month-1, 01);
   }
