@@ -25,7 +25,7 @@ class Tipo(models.Model):
 
 class Responsavel(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    orgao = models.ForeignKey(Orgao)
+    orgao = models.ForeignKey(Orgao, on_delete=models.PROTECT)
 
     def __str__(self):
         return self.user.username
@@ -50,7 +50,9 @@ class Evento(models.Model):
     responsavel = models.ForeignKey(Responsavel,
                                     on_delete=models.CASCADE, 
                                     help_text=" Pessoa responsável por adicionar o evento")
-    tipo = models.ForeignKey(Tipo, help_text="<strong>Trabalho Legislativo:</strong>  Atividades do dia a dia da \
+    tipo = models.ForeignKey(Tipo,
+												     on_delete=models.PROTECT,
+    												 help_text="<strong>Trabalho Legislativo:</strong>  Atividades do dia a dia da \
                                             Câmara Municipal que permitem a participação cidadã para fiscalização dos vereadores.\
                                             <i><strong>Exemplos:</strong> Reunião da Comissão, Sessão Plenária, CPI, Frente Parlamentar.</i><br/>\
                                             <strong>Conselhos / Fórum:</strong> São reuniões temáticas que visam garantir a participação \
